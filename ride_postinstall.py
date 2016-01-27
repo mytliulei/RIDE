@@ -6,24 +6,49 @@ from tkMessageBox import askyesno
 
 def verify_install():
     try:
-        import wxversion
+        import wx
     except ImportError:
-        print "No wxPython installation detected!"
-        print ""
-        print "Please ensure that you have wxPython installed before running RIDE."
-        print "You can obtain wxPython 2.8.12.1 from http://sourceforge.net/projects/wxpython/files/wxPython/2.8.12.1/"
+        print("No wxPython installation detected!")
+        print()
+        print("Please ensure that you have wxPython installed before running \
+RIDE.")
+        print("You can obtain wxPython 2.8.12.1 from \
+http://sourceforge.net/projects/wxpython/files/wxPython/2.8.12.1/")
     else:
-        print "Installation successful."
+        print("Installation successful.")
 
 
-def create_desktop_shortcut():
+def _create_desktop_shortcut_linux():
+    print(sys.platform)
+    pass
+
+
+def _create_desktop_shortcut_mac():
+    print(sys.platform)
+    pass
+
+
+def _create_desktop_shortcut_windows():
     Tk().withdraw()
     link = join(get_special_folder_path("CSIDL_DESKTOPDIRECTORY"), 'RIDE.lnk')
-    icon = join(sys.prefix, 'Lib', 'site-packages', 'robotide', 'widgets', 'robot.ico')
+    icon = join(sys.prefix, 'Lib', 'site-packages', 'robotide', 'widgets',
+                'robot.ico')
     if exists(link) or askyesno('Setup', 'Create desktop shortcut?'):
         create_shortcut('pythonw', "Robot Framework testdata editor", link,
                         '-c "from robotide import main; main()"', '', icon)
         file_created(link)
+
+
+def create_desktop_shortcut():
+    platform = sys.platform
+    if platform.find("linux") >= 0:
+        _create_desktop_shortcut_linux()
+    elif platform.find("mac") >= 0:
+        _create_desktop_shortcut_mac()
+    elif platform.find("windows") >= 0:
+        _create_desktop_shortcut_windows()
+    else:
+        print("Failed to create desktop shortcut.")
 
 
 if sys.argv[1] == '-install':
