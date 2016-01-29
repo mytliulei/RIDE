@@ -43,7 +43,8 @@ def _askdirectory(title, initialdir):
     dlg = wx.DirDialog(parent, title, initialdir, style=wx.DD_DIR_MUST_EXIST)
     if dlg.ShowModal() == wx.ID_OK:
         result = dlg.GetPath()
-    else: result = None
+    else:
+        result = None
     dlg.Destroy()
     return result
 
@@ -51,16 +52,14 @@ def _askdirectory(title, initialdir):
 def _create_desktop_shortcut_linux():
     import os
     DEFAULT_LANGUAGE = os.environ.get('LANG', '').split(':')
-    desktop = {"pt": r"Área de Trabalho", "en": "Desktop"}  # TODO: Add more\
-                                                            # languages
+    # TODO: Add more languages
+    desktop = {"pt": r"Área de Trabalho", "en": "Desktop"}
     try:
         ndesktop = desktop[DEFAULT_LANGUAGE[0][:2]]
-        link = join(os.path.join(os.path.expanduser('~'), ndesktop),
-                    "RIDE.desktop")
+        link = join(os.path.join(os.path.expanduser('~'), ndesktop), "RIDE.desktop")
     except KeyError as kerr:
         directory = _askdirectory(title="Locate Desktop Directory",
-                                 initialdir=os.path.join(os.path.expanduser('~'
-                                                                            )))
+                                  initialdir=os.path.join(os.path.expanduser('~')))
         if not directory:
             sys.exit("Desktop shortcut creation aborted!")
         else:
@@ -77,8 +76,14 @@ e=Application\nX-KDE-SubstituteUID=false\n")
 
 
 def _create_desktop_shortcut_mac():
-    print(sys.platform)
-    pass
+    import os
+    link = join(os.path.join(os.path.expanduser('~'), "Desktop"), "RIDE")
+    if exists(link) or _askyesno("Setup", "Create desktop shortcut?"):
+        roboticon = "/Library/Python/{0}/site-packages/robotide/widgets/robot.p\
+ng".format(sys.version[:3])  # TODO: Find a way to change shortcut icon
+        with open(link, "w+") as shortcut:
+            shortcut.write("#!/bin/sh\n/usr/local/bin/ride.py $* &\n")
+        os.chmod(link, 0744)
 
 
 def _create_desktop_shortcut_windows():
