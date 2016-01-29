@@ -40,12 +40,12 @@ def _create_desktop_shortcut_windows():
 
 
 def create_desktop_shortcut():
-    platform = sys.platform
-    if platform.find("linux") >= 0:
+    platform = sys.platform.lower()
+    if platform.startswith("linux"):
         _create_desktop_shortcut_linux()
-    elif platform.find("mac") >= 0:
+    elif platform.startswith("darwin"):
         _create_desktop_shortcut_mac()
-    elif platform.find("windows") >= 0:
+    elif platform.startswith("windows"):
         _create_desktop_shortcut_windows()
     else:
         print("Failed to create desktop shortcut.")
