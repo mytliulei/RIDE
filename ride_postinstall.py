@@ -51,12 +51,15 @@ def _askdirectory(title, initialdir):
 
 def _create_desktop_shortcut_linux():
     import os
+    import subprocess
+    import pwd
     DEFAULT_LANGUAGE = os.environ.get('LANG', '').split(':')
     # TODO: Add more languages
     desktop = {"pt": r"Área de Trabalho", "en": "Desktop"}
     try:
         ndesktop = desktop[DEFAULT_LANGUAGE[0][:2]]
-        link = join(os.path.join(os.path.expanduser('~'), ndesktop), "RIDE.desktop")
+        user = subprocess.check_output(['logname']).strip()
+        link = os.path.join("/home", user, ndesktop, "RIDE.desktop")
     except KeyError as kerr:
         directory = _askdirectory(title="Locate Desktop Directory",
                                   initialdir=os.path.join(os.path.expanduser('~')))
@@ -73,16 +76,23 @@ ride.py\nComment=A Robot Framework IDE\nGenericName=RIDE\n")
             shortcut.write("Icon={0}\n".format(roboticon))
             shortcut.write("Name=RIDE\nStartupNotify=true\nTerminal=false\nTyp\
 e=Application\nX-KDE-SubstituteUID=false\n")
+            uid = pwd.getpwnam(user).pw_uid
+            os.chown(link, uid, -1) # groupid == -1 means keep unchanged
 
 
 def _create_desktop_shortcut_mac():
     import os
-    link = join(os.path.join(os.path.expanduser('~'), "Desktop"), "RIDE")
+    import subprocess
+    import pwd
+    user = subprocess.check_output(['logname']).strip()
+    link = os.path.join("/Users", user, "Desktop", "RIDE")
     if exists(link) or _askyesno("Setup", "Create desktop shortcut?"):
         roboticon = "/Library/Python/{0}/site-packages/robotide/widgets/robot.p\
 ng".format(sys.version[:3])  # TODO: Find a way to change shortcut icon
         with open(link, "w+") as shortcut:
             shortcut.write("#!/bin/sh\n/usr/local/bin/ride.py $* &\n")
+        uid = pwd.getpwnam(user).pw_uid
+        os.chown(link, uid, -1) # groupid == -1 means keep unchanged
         os.chmod(link, 0744)
 
 
@@ -128,8 +138,8 @@ def create_desktop_shortcut(platform):
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == '-install':
         platform = sys.platform.lower()
-        if not platform.startswith("win"):
-            verify_install()
+        # if not platform.startswith("win"):
+            # verify_install()
         create_desktop_shortcut(platform)
     else:
         print(__doc__)
