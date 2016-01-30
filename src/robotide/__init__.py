@@ -53,9 +53,9 @@ except ImportError as e:
     else:
         print(errorMessageTemplate.substitute(reason="wxPython not found."))
     sys.exit(1)
-except VersionError:
-    print(errorMessageTemplate.substitute(reason="Wrong wxPython version."))
-    sys.exit(1)
+# except VersionError:
+#    print(errorMessageTemplate.substitute(reason="Wrong wxPython version."))
+#    sys.exit(1)
 
 if "ansi" in wx.PlatformInfo:
     print(errorMessageTemplate.substitute(
@@ -79,7 +79,7 @@ def main(*args):
             print("Error getting RIDE version!")
             sys.exit(1)
         print(version.VERSION)
-        sys.exit(1)
+        sys.exit(0)
     try:
         _run(inpath, not noupdatecheck, debug_console)
     except Exception:
