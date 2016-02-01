@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # encoding=utf-8
 
 import sys
@@ -23,22 +24,31 @@ http://sourceforge.net/projects/wxpython/files/wxPython/2.8.12.1/")
         sys.exit(1)
     import subprocess
     version = subprocess.check_output("ride.py --version", shell=True)
-    print("Installation successful (version {0}).".format(version.strip()))
+    if version:
+        print("Installation successful (version {0}).".format(version.strip()))
 
 
 def _create_desktop_shortcut_linux():
     import os
     Tk().withdraw()
-    DEFAULT_LANGUAGES = os.environ.get('LANG', '').split(':')
-    # print("Lang {0}.\n".format(DEFAULT_LANGUAGES[0]))
+    DEFAULT_LANGUAGE = os.environ.get('LANG', '').split(':')
+    # print("Lang {0}.\n".format(DEFAULT_LANGUAGES0]))
     desktop = {"pt": r"Área de Trabalho", "en": "Desktop"}  # TODO: Add more\
     # languages
     try:
-        ndesktop = desktop[DEFAULT_LANGUAGES[0][:2]]
+        ndesktop = desktop[DEFAULT_LANGUAGE[0][:2]]
+        link = join(os.path.join(os.path.expanduser('~'), ndesktop),
+                    "RIDE.desktop")
     except KeyError as kerr:
-        ndesktop = desktop["en"]  # TODO: Ask desktop directory name
-    link = join(os.path.join(os.path.expanduser('~'), ndesktop),
-                "RIDE.desktop")
+        from tkFileDialog import askdirectory
+        directory = askdirectory(title="Locate Desktop Directory",
+                                 mustexist=1,
+                                 initialdir=os.path.join(os.path.expanduser('~'
+                                                                            )))
+        if not directory:
+            sys.exit("Desktop shortcut creation aborted!")
+        else:
+            link = join(directory, "RIDE.desktop")
     if exists(link) or askyesno("Setup", "Create desktop shortcut?"):
         roboticon = "/usr/lib/python{0}/site-packages/robotide/widgets/robot.p\
 ng".format(sys.version[:3])
@@ -76,7 +86,7 @@ def create_desktop_shortcut():
     elif platform.startswith("windows"):
         _create_desktop_shortcut_windows()
     else:
-        print("Failed to create desktop shortcut.")
+        sys.exit("Unknown platform: Failed to create desktop shortcut.")
 
 
 if len(sys.argv) > 1 and sys.argv[1] == 'install':
