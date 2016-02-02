@@ -7,7 +7,7 @@ from Tkinter import Tk
 from tkMessageBox import askyesno
 
 __doc__ = """
-Usage: ride_postinstall.py <install|uninstall>
+Usage: ride_postinstall.py <-install|-remove>
 """.strip()
 
 
@@ -83,13 +83,14 @@ def create_desktop_shortcut():
         _create_desktop_shortcut_linux()
     elif platform.startswith("darwin"):
         _create_desktop_shortcut_mac()
-    elif platform.startswith("windows"):
+    elif platform.startswith("win"):
         _create_desktop_shortcut_windows()
     else:
-        sys.exit("Unknown platform: Failed to create desktop shortcut.")
+        sys.exit("Unknown platform {0}: Failed to create desktop shortcut.".
+                 format(platform))
 
 
-if len(sys.argv) > 1 and sys.argv[1] == 'install':
+if len(sys.argv) > 1 and sys.argv[1] == '-install':
     verify_install()
     create_desktop_shortcut()
 else:
