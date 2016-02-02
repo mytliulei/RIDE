@@ -1,29 +1,17 @@
 #!/usr/bin/env python
 
 import sys
-from os.path import join, dirname
+from os.path import abspath, join, dirname
 
 sys.path.append(join(dirname(__file__), 'src'))
 from ez_setup import use_setuptools
 use_setuptools()
 from setuptools import setup, find_packages
 
-"""
-def find_packages(where):
-    def is_package(path):
-        return isdir(path) and isfile(join(path, '__init__.py'))
-    pkgs = []
-    for dirpath, dirs, _ in os.walk(where):
-        for dir_name in dirs:
-            pkg_path = join(dirpath, dir_name)
-            if is_package(pkg_path):
-                pkgs.append('.'.join((pkg_path.split(os.sep)[1:])))
-    return pkgs
-"""
-
+ROOT_DIR = dirname(abspath(__file__))
 SOURCE_DIR = 'src'
 
-version_file = join(dirname(__file__), 'src', 'robotide', 'version.py')
+version_file = join(ROOT_DIR, 'src', 'robotide', 'version.py')
 exec(compile(open(version_file).read(), version_file, 'exec'))
 
 package_data = {
@@ -64,8 +52,7 @@ setup(
     package_dir={'': SOURCE_DIR},
     packages=find_packages(SOURCE_DIR),
     package_data=package_data,
-    # Robot Framework package data is included, but RIDE does not need it.
-    include_package_data=True,
+    # Robot Framework package data is not included, but RIDE does not need it.
     # Always install everything, since we may be switching between versions
     options={'install': {'force': True}},
     scripts=['src/bin/ride.py', 'ride_postinstall.py'],
