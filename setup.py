@@ -1,8 +1,14 @@
-import os
-from os.path import abspath, join, dirname, isdir, isfile
-from distutils.core import setup
+#!/usr/bin/env python
 
+import sys
+from os.path import join, dirname
 
+sys.path.append(join(dirname(__file__), 'src'))
+from ez_setup import use_setuptools
+use_setuptools()
+from setuptools import setup, find_packages
+
+"""
 def find_packages(where):
     def is_package(path):
         return isdir(path) and isfile(join(path, '__init__.py'))
@@ -13,11 +19,12 @@ def find_packages(where):
             if is_package(pkg_path):
                 pkgs.append('.'.join((pkg_path.split(os.sep)[1:])))
     return pkgs
+"""
 
-ROOT_DIR = dirname(abspath(__file__))
 SOURCE_DIR = 'src'
 
-execfile(join(ROOT_DIR, 'src', 'robotide', 'version.py'))
+version_file = join(dirname(__file__), 'src', 'robotide', 'version.py')
+exec(compile(open(version_file).read(), version_file, 'exec'))
 
 package_data = {
     'robotide.preferences': ['settings.cfg'],
@@ -53,10 +60,12 @@ setup(
     author_email='robotframework@gmail.com',
     url='https://github.com/robotframework/RIDE/',
     download_url='https://pypi.python.org/pypi/robotframework-ride',
+    py_modules=['ez_setup'],
     package_dir={'': SOURCE_DIR},
     packages=find_packages(SOURCE_DIR),
     package_data=package_data,
-    # Robot Framework package data is not included, but RIDE does not need it.
+    # Robot Framework package data is included, but RIDE does not need it.
+    include_package_data=True,
     # Always install everything, since we may be switching between versions
     options={'install': {'force': True}},
     scripts=['src/bin/ride.py', 'ride_postinstall.py'],
