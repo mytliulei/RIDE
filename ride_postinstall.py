@@ -50,7 +50,7 @@ def _create_desktop_shortcut_linux():
         roboticon = "/usr/lib/python{0}/site-packages/robotide/widgets/robot.p\
 ng".format(sys.version[:3])
         with open(link, "w+") as shortcut:
-            shortcut.write("[Desktop Entry]\nExec=ride.py\nComment=A Robot Fra\
+            shortcut.write("#!/usr/bin/env xdg-open\n[Desktop Entry]\nExec=ride.py\nComment=A Robot Fra\
 mework IDE\nGenericName=RIDE\n")
             shortcut.write("Icon={0}\n".format(roboticon))
             shortcut.write("Name=RIDE\nStartupNotify=true\nTerminal=false\nTyp\
