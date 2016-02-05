@@ -35,6 +35,18 @@ Programming Language :: Python
 Topic :: Software Development :: Testing
 """.strip().splitlines()
 
+# This solution is found at http://stackoverflow.com/a/26490820/5889853
+from setuptools.command.install import install
+import os
+
+class CustomInstallCommand(install):
+    """Customized setuptools install command - prints a friendly greeting."""
+    def run(self):
+        print("Before running normal install.\nHello, developer, how are you?\n")
+        install.run(self)
+        #post-processing code
+        print("This is postinstall.\nGoodbye developer. Have a nice day!\n")
+        os.system("ride_postinstall.py -install")
 setup(
     name='robotframework-ride',
     version=VERSION,
@@ -56,5 +68,6 @@ setup(
     # Always install everything, since we may be switching between versions
     options={'install': {'force': True}},
     scripts=['src/bin/ride.py', 'ride_postinstall.py'],
+    cmdclass={'install': CustomInstallCommand},
     requires=['Pygments']
 )
