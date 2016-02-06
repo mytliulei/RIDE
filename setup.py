@@ -42,10 +42,10 @@ import os
 class CustomInstallCommand(install):
     """Customized setuptools install command - prints a friendly greeting."""
     def run(self):
-        print("Before running normal install.\nHello, developer, how are you?\n")
+        # print("Before running normal install.\nHello, developer, how are you?\n")
         install.run(self)
         #post-processing code
-        print("This is postinstall.\nGoodbye developer. Have a nice day!\n")
+        # print("This is postinstall.\nGoodbye developer. Have a nice day!\n")
         os.system("ride_postinstall.py -install")
 setup(
     name='robotframework-ride',

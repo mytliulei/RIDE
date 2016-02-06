@@ -87,17 +87,33 @@ ng".format(sys.version[:3])  # TODO: Find a way to change shortcut icon
 
 
 def _create_desktop_shortcut_windows():
-    link = join(get_special_folder_path("CSIDL_DESKTOPDIRECTORY"), 'RIDE.lnk')
+    # Dependency of http://sourceforge.net/projects/pywin32/
+    import os
+    import sys
+    print("You may create a Desktop shortcut to RIDE with:\
+\nride_postinstall.py -install\n")
+    import pythoncom
+    from win32com.shell import shell, shellcon
+    desktop = shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOP, None, 0)
+    link = join(desktop, 'RIDE.lnk')
     icon = join(sys.prefix, 'Lib', 'site-packages', 'robotide', 'widgets',
                 'robot.ico')
-    if exists(link) or _askyesno('Setup', 'Create desktop shortcut?'):
-        create_shortcut('pythonw', "Robot Framework testdata editor", link,
-                        '-c "from robotide import main; main()"', '', icon)
-        file_created(link)
+    if not exists(link): # or _askyesno('Setup', 'Create desktop shortcut?'):
+        shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None,
+                                              pythoncom.CLSCTX_INPROC_SERVER,
+                                              shell.IID_IShellLink)
+        command_args = " -c \"from robotide import main; main()\""
+        shortcut.SetPath("pythonw.exe") # sys.executable
+        shortcut.SetArguments(command_args)
+        shortcut.SetDescription("Robot Framework testdata editor")
+        shortcut.SetIconLocation(icon, 0)
+        persist_file = shortcut.QueryInterface(pythoncom.IID_IPersistFile)
+        persist_file.Save(link, 0)
+        if __name__ != '__main__':
+            file_created(link)
 
 
-def create_desktop_shortcut():
-    platform = sys.platform.lower()
+def create_desktop_shortcut(platform):
     if platform.startswith("linux"):
         _create_desktop_shortcut_linux()
     elif platform.startswith("darwin"):
@@ -109,9 +125,16 @@ def create_desktop_shortcut():
                  format(platform))
 
 
-if len(sys.argv) > 1 and sys.argv[1] == '-install':
-    verify_install()
-    create_desktop_shortcut()
-else:
-    print(__doc__)
-    sys.exit(0)
+def main():
+    if len(sys.argv) > 1 and sys.argv[1] == '-install':
+        platform = sys.platform.lower()
+        if not platform.startswith("win"):
+            verify_install()
+        create_desktop_shortcut(platform)
+    else:
+        print(__doc__)
+        sys.exit(0)
+
+
+if __name__ == '__main__':
+    main()
