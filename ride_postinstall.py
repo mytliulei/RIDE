@@ -55,14 +55,17 @@ def _create_desktop_shortcut_linux():
     import pwd
     DEFAULT_LANGUAGE = os.environ.get('LANG', '').split(':')
     # TODO: Add more languages
-    desktop = {"pt": r"Área de Trabalho", "en": "Desktop"}
+    desktop = {"de": "Desktop", "en": "Desktop", "es": "Escritorio",
+               "fi": r"Työpötä", "fr": "Bureau", "it": "Scrivania",
+               "pt": r"Área de Trabalho"}
     try:
         ndesktop = desktop[DEFAULT_LANGUAGE[0][:2]]
         user = subprocess.check_output(['logname']).strip()
         link = os.path.join("/home", user, ndesktop, "RIDE.desktop")
     except KeyError as kerr:
         directory = _askdirectory(title="Locate Desktop Directory",
-                                  initialdir=os.path.join(os.path.expanduser('~')))
+                                  initialdir=os.path.join(os.path.expanduser(
+                                                          '~')))
         if not directory:
             sys.exit("Desktop shortcut creation aborted!")
         else:
@@ -77,7 +80,7 @@ ride.py\nComment=A Robot Framework IDE\nGenericName=RIDE\n")
             shortcut.write("Name=RIDE\nStartupNotify=true\nTerminal=false\nTyp\
 e=Application\nX-KDE-SubstituteUID=false\n")
             uid = pwd.getpwnam(user).pw_uid
-            os.chown(link, uid, -1) # groupid == -1 means keep unchanged
+            os.chown(link, uid, -1)  # groupid == -1 means keep unchanged
 
 
 def _create_desktop_shortcut_mac():
@@ -92,7 +95,7 @@ ng".format(sys.version[:3])  # TODO: Find a way to change shortcut icon
         with open(link, "w+") as shortcut:
             shortcut.write("#!/bin/sh\n/usr/local/bin/ride.py $* &\n")
         uid = pwd.getpwnam(user).pw_uid
-        os.chown(link, uid, -1) # groupid == -1 means keep unchanged
+        os.chown(link, uid, -1)  # groupid == -1 means keep unchanged
         os.chmod(link, 0744)
 
 
@@ -108,12 +111,15 @@ def _create_desktop_shortcut_windows():
     link = join(desktop, 'RIDE.lnk')
     icon = join(sys.prefix, 'Lib', 'site-packages', 'robotide', 'widgets',
                 'robot.ico')
-    if not exists(link): # or _askyesno('Setup', 'Create desktop shortcut?'):
+    if not exists(link):
+        if __name__ == '__main__':
+            if not _askyesno('Setup', 'Create desktop shortcut?'):
+                sys.exit("Skipped Desktop shortcut creation.")
         shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None,
                                               pythoncom.CLSCTX_INPROC_SERVER,
                                               shell.IID_IShellLink)
         command_args = " -c \"from robotide import main; main()\""
-        shortcut.SetPath("pythonw.exe") # sys.executable
+        shortcut.SetPath("pythonw.exe")  # sys.executable
         shortcut.SetArguments(command_args)
         shortcut.SetDescription("Robot Framework testdata editor")
         shortcut.SetIconLocation(icon, 0)
@@ -138,8 +144,8 @@ def create_desktop_shortcut(platform):
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == '-install':
         platform = sys.platform.lower()
-        # if not platform.startswith("win"):
-            # verify_install()
+        if not platform.startswith("win"):
+            verify_install()
         create_desktop_shortcut(platform)
     else:
         print(__doc__)
