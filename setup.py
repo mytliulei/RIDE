@@ -46,7 +46,9 @@ class CustomInstallCommand(install):
         install.run(self)
         #post-processing code
         # print("This is postinstall.\nGoodbye developer. Have a nice day!\n")
+        import sys
         os.system("ride_postinstall.py -install")
+
 setup(
     name='robotframework-ride',
     version=VERSION,

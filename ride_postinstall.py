@@ -103,18 +103,19 @@ def _create_desktop_shortcut_windows():
     # Dependency of http://sourceforge.net/projects/pywin32/
     import os
     import sys
-    print("You may create a Desktop shortcut to RIDE with:\
-\nride_postinstall.py -install\n")
-    import pythoncom
     from win32com.shell import shell, shellcon
     desktop = shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOP, None, 0)
-    link = join(desktop, 'RIDE.lnk')
-    icon = join(sys.prefix, 'Lib', 'site-packages', 'robotide', 'widgets',
+    link = os.path.join(desktop, 'RIDE.lnk')
+    icon = os.path.join(sys.prefix, 'Lib', 'site-packages', 'robotide', 'widgets',
                 'robot.ico')
     if not exists(link):
-        if __name__ == '__main__':
-            if not _askyesno('Setup', 'Create desktop shortcut?'):
-                sys.exit("Skipped Desktop shortcut creation.")
+        from Tkinter import Tk
+        from tkMessageBox import askyesno
+        Tk().withdraw()
+        if not askyesno('Setup', 'Create desktop shortcut?'):
+            sys.exit("Users can create a Desktop shortcut to RIDE with:\
+\nride_postinstall.py -install\n")
+        import pythoncom
         shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None,
                                               pythoncom.CLSCTX_INPROC_SERVER,
                                               shell.IID_IShellLink)
