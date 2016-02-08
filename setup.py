@@ -39,14 +39,11 @@ Topic :: Software Development :: Testing
 from setuptools.command.install import install
 import os
 
+
 class CustomInstallCommand(install):
     """Customized setuptools install command - prints a friendly greeting."""
     def run(self):
-        # print("Before running normal install.\nHello, developer, how are you?\n")
         install.run(self)
-        #post-processing code
-        # print("This is postinstall.\nGoodbye developer. Have a nice day!\n")
-        import sys
         os.system("ride_postinstall.py -install")
 
 setup(

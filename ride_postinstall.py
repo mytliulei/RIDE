@@ -7,6 +7,7 @@ from os.path import exists, join
 __doc__ = """
 Usage: ride_postinstall.py <-install|-remove>
 """.strip()
+# TODO: Add -remove, to remove desktop shortcut
 
 
 def verify_install():
@@ -106,8 +107,8 @@ def _create_desktop_shortcut_windows():
     from win32com.shell import shell, shellcon
     desktop = shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOP, None, 0)
     link = os.path.join(desktop, 'RIDE.lnk')
-    icon = os.path.join(sys.prefix, 'Lib', 'site-packages', 'robotide', 'widgets',
-                'robot.ico')
+    icon = os.path.join(sys.prefix, 'Lib', 'site-packages', 'robotide',
+                        'widgets', 'robot.ico')
     if not exists(link):
         from Tkinter import Tk
         from tkMessageBox import askyesno
@@ -127,7 +128,7 @@ def _create_desktop_shortcut_windows():
         persist_file = shortcut.QueryInterface(pythoncom.IID_IPersistFile)
         persist_file.Save(link, 0)
         if __name__ != '__main__':
-            file_created(link)
+            file_created(link)  # Only in Windows installer. How to detect?
 
 
 def create_desktop_shortcut(platform):
