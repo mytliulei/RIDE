@@ -4,8 +4,6 @@ import sys
 from os.path import abspath, join, dirname
 
 sys.path.append(join(dirname(__file__), 'src'))
-from ez_setup import use_setuptools
-use_setuptools()
 from setuptools import setup, find_packages
 
 ROOT_DIR = dirname(abspath(__file__))
@@ -35,17 +33,6 @@ Programming Language :: Python
 Topic :: Software Development :: Testing
 """.strip().splitlines()
 
-# This solution is found at http://stackoverflow.com/a/26490820/5889853
-from setuptools.command.install import install
-import os
-
-
-class CustomInstallCommand(install):
-    """Customized setuptools install command - prints a friendly greeting."""
-    def run(self):
-        install.run(self)
-        os.system("ride_postinstall.py -install")
-
 setup(
     name='robotframework-ride',
     version=VERSION,
@@ -59,14 +46,12 @@ setup(
     author_email='robotframework@gmail.com',
     url='https://github.com/robotframework/RIDE/',
     download_url='https://pypi.python.org/pypi/robotframework-ride',
-    py_modules=['ez_setup'],
     package_dir={'': SOURCE_DIR},
     packages=find_packages(SOURCE_DIR),
     package_data=package_data,
     # Robot Framework package data is not included, but RIDE does not need it.
     # Always install everything, since we may be switching between versions
     options={'install': {'force': True}},
-    scripts=['src/bin/ride.py', 'ride_postinstall.py'],
-    cmdclass={'install': CustomInstallCommand},
+    scripts=['src/bin/ride.py'],
     requires=['Pygments']
 )

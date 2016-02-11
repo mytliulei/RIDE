@@ -5,7 +5,7 @@ import sys
 from os.path import exists, join
 
 __doc__ = """
-Usage: ride_postinstall.py <-install|-remove>
+Usage: python -m robotide.postinstall <-install|-remove>
 """.strip()
 # TODO: Add -remove, to remove desktop shortcut
 
@@ -147,16 +147,19 @@ def create_desktop_shortcut(platform):
                  format(platform))
 
 
-def main():
-    if len(sys.argv) > 1 and sys.argv[1] == '-install':
+def main(args):
+    arg = args[-1] if len(args) and args[-1] in ['-install', '-remove', '-help'] else None
+    if arg == '-install':
         platform = sys.platform.lower()
         if not platform.startswith("win"):
             verify_install()
         create_desktop_shortcut(platform)
+    elif arg == '-remove':
+        sys.exit("Sorry, -remove is not implemented yet.")
     else:
         print(__doc__)
         sys.exit(0)
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])
