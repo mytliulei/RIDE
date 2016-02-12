@@ -1,5 +1,19 @@
 #!/usr/bin/env python
 # encoding=utf-8
+#  TODO: Copyright 2016 Robot Framework Organization
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 
 import sys
 from os.path import exists, join
@@ -25,57 +39,77 @@ http://sourceforge.net/projects/wxpython/files/wxPython/2.8.12.1/")
         print("Installation successful.")
 
 
-def _askyesno(title, message):
+def _askyesno(title, message, frame=None):
     import wx
-    _ = wx.App()
-    parent = wx.Frame(None, size=(0, 0))
+    if frame is None:
+        _ = wx.App()
+        parent = wx.Frame(None, size=(0, 0))
+    else:
+        parent = wx.Frame(frame, size=(0, 0))
     parent.CenterOnScreen()
     dlg = wx.MessageDialog(parent, message, title, wx.YES_NO |
                            wx.ICON_QUESTION)
     result = dlg.ShowModal() == wx.ID_YES
     dlg.Destroy()
+    parent.Destroy()
     return result
 
 
-def _askdirectory(title, initialdir):
+def _askdirectory(title, initialdir, frame=None):
     import wx
-    _ = wx.App()
-    parent = wx.Frame(None, size=(0, 0))
+    if frame is None:
+        _ = wx.App()
+        parent = wx.Frame(None, size=(0, 0))
+    else:
+        parent = wx.Frame(frame, size=(0, 0))
+    parent.CenterOnScreen()
     dlg = wx.DirDialog(parent, title, initialdir, style=wx.DD_DIR_MUST_EXIST)
     if dlg.ShowModal() == wx.ID_OK:
         result = dlg.GetPath()
     else:
         result = None
     dlg.Destroy()
+    parent.Destroy()
     return result
 
 
-def _create_desktop_shortcut_linux():
+def _create_desktop_shortcut_linux(frame=None):
     import os
     import subprocess
     import pwd
     DEFAULT_LANGUAGE = os.environ.get('LANG', '').split(':')
     # TODO: Add more languages
     desktop = {"de": "Desktop", "en": "Desktop", "es": "Escritorio",
-               "fi": r"Työpötä", "fr": "Bureau", "it": "Scrivania",
+               "fi": r"Työpöytä", "fr": "Bureau", "it": "Scrivania",
                "pt": r"Área de Trabalho"}
+    user = subprocess.check_output(['logname']).strip()
     try:
         ndesktop = desktop[DEFAULT_LANGUAGE[0][:2]]
-        user = subprocess.check_output(['logname']).strip()
         directory = os.path.join("/home", user, ndesktop)
-        link = os.path.join(directory, "RIDE.desktop")
+        defaultdir = os.path.join("/home", user, "Desktop")
+        if not exists(directory):
+            if exists(defaultdir):
+                directory = defaultdir
+            else:
+                directory = _askdirectory(title="Locate Desktop Directory",
+                                          initialdir=os.path.join(
+                                              os.path.expanduser('~')),
+                                          frame=frame)
     except KeyError as kerr:
         directory = _askdirectory(title="Locate Desktop Directory",
                                   initialdir=os.path.join(os.path.expanduser(
-                                                          '~')))
-        if not directory:
-            sys.exit("Desktop shortcut creation aborted!")
-        else:
-            link = join(directory, "RIDE.desktop")
-    defaultdir = os.path.join(os.path.expanduser('~'), "Desktop")
-    if exists(defaultdir) and not exists(directory):
-       link = join(defaultdir, "RIDE.desktop")
-    if exists(link) or _askyesno("Setup", "Create desktop shortcut?"):
+                                                          '~')), frame=frame)
+    if directory is None:
+        print("Desktop shortcut creation aborted!")
+        return
+    try:
+        directory.decode('utf-8')
+        link = join(directory, "RIDE.desktop")
+        print "directory is UTF-8, length %d bytes" % len(directory)
+    except UnicodeError:
+        link = join(directory.encode('utf-8'), "RIDE.desktop")
+        print "directory is not UTF-8"
+    if exists(link) or _askyesno("Setup", "Create desktop shortcut?", frame):
         roboticon = "/usr/lib/python{0}/site-packages/robotide/widgets/robot.p\
 ng".format(sys.version[:3])
         with open(link, "w+") as shortcut:
@@ -86,7 +120,7 @@ ride.py\nComment=A Robot Framework IDE\nGenericName=RIDE\n")
 e=Application\nX-KDE-SubstituteUID=false\n")
             uid = pwd.getpwnam(user).pw_uid
             os.chown(link, uid, -1)  # groupid == -1 means keep unchanged
-
+# .encode('utf-8')
 
 def _create_desktop_shortcut_mac():
     import os
@@ -135,9 +169,9 @@ def _create_desktop_shortcut_windows():
             file_created(link)  # Only in Windows installer. How to detect?
 
 
-def create_desktop_shortcut(platform):
+def create_desktop_shortcut(platform, frame=None):
     if platform.startswith("linux"):
-        _create_desktop_shortcut_linux()
+        _create_desktop_shortcut_linux(frame)
     elif platform.startswith("darwin"):
         _create_desktop_shortcut_mac()
     elif platform.startswith("win"):
@@ -145,6 +179,10 @@ def create_desktop_shortcut(platform):
     else:
         sys.exit("Unknown platform {0}: Failed to create desktop shortcut.".
                  format(platform))
+
+
+def caller(frame, platform):
+    create_desktop_shortcut(platform, frame)
 
 
 def main(args):
