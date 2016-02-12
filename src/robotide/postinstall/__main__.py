@@ -34,10 +34,10 @@ def verify_install():
 RIDE.")
         print("You can obtain wxPython 2.8.12.1 from \
 http://sourceforge.net/projects/wxpython/files/wxPython/2.8.12.1/")
-        sys.exit(1)
+        return False
     else:
         print("Installation successful.")
-
+        return True
 
 def _askyesno(title, message, frame=None):
     import wx
@@ -105,10 +105,8 @@ def _create_desktop_shortcut_linux(frame=None):
     try:
         directory.decode('utf-8')
         link = join(directory, "RIDE.desktop")
-        print "directory is UTF-8, length %d bytes" % len(directory)
     except UnicodeError:
         link = join(directory.encode('utf-8'), "RIDE.desktop")
-        print "directory is not UTF-8"
     if exists(link) or _askyesno("Setup", "Create desktop shortcut?", frame):
         roboticon = "/usr/lib/python{0}/site-packages/robotide/widgets/robot.p\
 ng".format(sys.version[:3])
@@ -120,15 +118,15 @@ ride.py\nComment=A Robot Framework IDE\nGenericName=RIDE\n")
 e=Application\nX-KDE-SubstituteUID=false\n")
             uid = pwd.getpwnam(user).pw_uid
             os.chown(link, uid, -1)  # groupid == -1 means keep unchanged
-# .encode('utf-8')
 
-def _create_desktop_shortcut_mac():
+
+def _create_desktop_shortcut_mac(frame=None):
     import os
     import subprocess
     import pwd
     user = subprocess.check_output(['logname']).strip()
     link = os.path.join("/Users", user, "Desktop", "RIDE")
-    if exists(link) or _askyesno("Setup", "Create desktop shortcut?"):
+    if exists(link) or _askyesno("Setup", "Create desktop shortcut?", frame):
         roboticon = "/Library/Python/{0}/site-packages/robotide/widgets/robot.p\
 ng".format(sys.version[:3])  # TODO: Find a way to change shortcut icon
         with open(link, "w+") as shortcut:
@@ -138,7 +136,7 @@ ng".format(sys.version[:3])  # TODO: Find a way to change shortcut icon
         os.chmod(link, 0744)
 
 
-def _create_desktop_shortcut_windows():
+def _create_desktop_shortcut_windows(frame=None):
     # Dependency of http://sourceforge.net/projects/pywin32/
     import os
     import sys
@@ -148,12 +146,13 @@ def _create_desktop_shortcut_windows():
     icon = os.path.join(sys.prefix, 'Lib', 'site-packages', 'robotide',
                         'widgets', 'robot.ico')
     if not exists(link):
-        from Tkinter import Tk
-        from tkMessageBox import askyesno
-        Tk().withdraw()
-        if not askyesno('Setup', 'Create desktop shortcut?'):
-            sys.exit("Users can create a Desktop shortcut to RIDE with:\
-\nride_postinstall.py -install\n")
+        #from Tkinter import Tk
+        #from tkMessageBox import askyesno
+        #Tk().withdraw()
+        # New aproach, don't ask user, just create
+        #if not _askyesno("Setup", "Create desktop shortcut?", frame):
+        #    print("Users can create a Desktop shortcut to RIDE with:\npython -m robotide.postinstall -install\n")
+        #    return
         import pythoncom
         shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None,
                                               pythoncom.CLSCTX_INPROC_SERVER,
@@ -165,33 +164,33 @@ def _create_desktop_shortcut_windows():
         shortcut.SetIconLocation(icon, 0)
         persist_file = shortcut.QueryInterface(pythoncom.IID_IPersistFile)
         persist_file.Save(link, 0)
-        if __name__ != '__main__':
-            file_created(link)  # Only in Windows installer. How to detect?
 
 
 def create_desktop_shortcut(platform, frame=None):
     if platform.startswith("linux"):
         _create_desktop_shortcut_linux(frame)
     elif platform.startswith("darwin"):
-        _create_desktop_shortcut_mac()
+        _create_desktop_shortcut_mac(frame)
     elif platform.startswith("win"):
-        _create_desktop_shortcut_windows()
+        _create_desktop_shortcut_windows(frame)
     else:
-        sys.exit("Unknown platform {0}: Failed to create desktop shortcut.".
+        print("Unknown platform {0}: Failed to create desktop shortcut.".
                  format(platform))
 
 
 def caller(frame, platform):
+    # We don't verify install because called from RIDE
     create_desktop_shortcut(platform, frame)
 
 
 def main(args):
     arg = args[-1] if len(args) and args[-1] in ['-install', '-remove', '-help'] else None
     if arg == '-install':
+        doit = True
         platform = sys.platform.lower()
-        if not platform.startswith("win"):
-            verify_install()
-        create_desktop_shortcut(platform)
+        #if not platform.startswith("win"):
+        doit = verify_install()
+        if doit: create_desktop_shortcut(platform)
     elif arg == '-remove':
         sys.exit("Sorry, -remove is not implemented yet.")
     else:
