@@ -534,15 +534,26 @@ class UpdateVariable(_Command):
         self._new_name = new_name
         self._new_value = new_value
         self._new_comment = new_comment
+        self._name = None
 
     def execute(self, context):
+        self._name = context.name
+        name_changed = (self._name != self._new_name)
+        print("DEBUG: name={0} changed?={1}\n".format(self._name, name_changed))
         has_data = context.has_data()
         context.set_value(self._new_name, self._new_value)
         context.set_comment(self._new_comment)
+        print("DEBUG: UpdateVariable name={0}\n".format(self._new_name))
         if has_data:
             context.notify_value_changed()
         else:
             context.notify_variable_added()
+        occurrences = []
+        if name_changed:
+            occurrences = FindVariableOccurrences(self._name)
+            print("DEBUG: Occurrences list={0}\n".format(occurrences.__dict__))
+            #for occ in occurrences:
+            #    print("DEBUG: Occurrences name={0}\n".format(occ))
 
 
 class UpdateVariableName(_Command):

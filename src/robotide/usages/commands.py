@@ -37,6 +37,7 @@ class FindUsages(FindOccurrences):
 class FindVariableUsages(FindVariableOccurrences):
     
     def execute(self, context):
+        print("DEBUG: FindVariableUsages: looking for variables?\n")
         prev = None
         for occ in FindVariableOccurrences.execute(self, context):
             if prev == occ:
