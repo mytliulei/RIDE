@@ -127,8 +127,12 @@ class _ContentAssistTextCtrlBase(object):
         return ('', name)
 
     def _show_content_assist(self):
-        height = self.GetSizeTuple()[1]
-        x, y = self.ClientToScreenXY(0, 0)
+        if wx.VERSION >= (3, 0, 3, ''):  # DEBUG wxPhoenix
+            _, height = self.GetSize()
+            x, y = self.ClientToScreen((0, 0))
+        else:
+            height = self.GetSizeTuple()[1]
+            x, y = self.ClientToScreenXY(0, 0)
         self._popup.show(x, y, height)
 
     def content_assist_value(self):
@@ -391,8 +395,12 @@ class ContentAssistList(wx.ListCtrl):
     def populate(self, data):
         self.ClearAll()
         self.InsertColumn(0, '', width=self.Size[0])
-        for row, item in enumerate(data):
-            self.InsertStringItem(row, item)
+        if wx.VERSION >= (3, 0, 3, ''):  # DEBUG wxPhoenix
+            for row, item in enumerate(data):
+                self.InsertItem(row, item)
+        else:
+            for row, item in enumerate(data):
+                self.InsertStringItem(row, item)
         self.Select(0)
 
     def get_text(self, index):
