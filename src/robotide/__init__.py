@@ -38,7 +38,7 @@ http://sourceforge.net/projects/wxpython/files/wxPython/2.8.12.1/."""
 
 errorMessageTemplate = Template("""$reason
 You need to install wxPython 2.8.12.1 with unicode support to run RIDE.
-{}""".format(wxPythonDownload))
+{0}""".format(wxPythonDownload))
 
 try:
     import wx
@@ -98,10 +98,10 @@ def _run(inpath=None, updatecheck=True, debug_console=False):
     except ImportError:
         _show_old_wxpython_warning_if_needed()
         raise
+    _show_old_wxpython_warning_if_needed()
     if inpath:
         inpath = unicode(inpath, sys.getfilesystemencoding())
     ride = RIDE(inpath, updatecheck)
-    _show_old_wxpython_warning_if_needed(ride.frame)
     if debug_console:
         debugconsole.start(ride)
     ride.MainLoop()
