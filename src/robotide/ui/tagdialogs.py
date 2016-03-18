@@ -130,10 +130,10 @@ class ViewAllTagsDialog(wx.Frame, listmix.ColumnSorterMixin):
         self.SortListItems(self.sort_state[0], self.sort_state[1])
 
     def update_footer(self):
-        footer_string = ("Total tests %d, Tests with tags %d, Unique tags %d, "
-                         "Currently selected tests %d") % \
-                        (self.total_test_cases, len(self.tagged_test_cases),
-                         self.unique_tags, len(self.selected_tests))
+        footer_string = "Total tests %d, Tests with tags %d, Unique tags %d," \
+                        " Currently selected tests %d" % \
+            (self.total_test_cases, len(self.tagged_test_cases),
+             self.unique_tags, len(self.selected_tests))
         self._footer_text.SetLabel(footer_string)
 
     def show_dialog(self):
@@ -151,7 +151,7 @@ class ViewAllTagsDialog(wx.Frame, listmix.ColumnSorterMixin):
 
     def _search_for_tags(self):
         unique_tags = utils.NormalizedDict()
-        self._tagit = utils.NormalizedDict()
+        self._tags = utils.NormalizedDict()
         self._test_cases = []
         for test in self.frame._controller.all_testcases():
             self._test_cases.append(test)
@@ -162,10 +162,10 @@ class ViewAllTagsDialog(wx.Frame, listmix.ColumnSorterMixin):
                     tag_name = unicode(tag)
                 if tag_name in unique_tags:
                     unique_tags[tag_name].append(test)
-                    self._tagit[tag_name].append(tag)
+                    self._tags[tag_name].append(tag)
                 else:
                     unique_tags[tag_name] = [test]
-                    self._tagit[tag_name] = [tag]
+                    self._tags[tag_name] = [tag]
 
         isreversed = (self.sort_state[1] != 1)
         self.total_test_cases = len(self._test_cases)

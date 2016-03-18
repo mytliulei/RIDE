@@ -33,9 +33,12 @@ import sys
 import os
 from string import Template
 
+wxPythonDownload = """wxPython 2.8.12.1 packages can be found from
+http://sourceforge.net/projects/wxpython/files/wxPython/2.8.12.1/."""
+
 errorMessageTemplate = Template("""$reason
 You need to install wxPython 2.8.12.1 with unicode support to run RIDE.
-wxPython 2.8.12.1 can be downloaded from http://sourceforge.net/projects/wxpython/files/wxPython/2.8.12.1/""")
+{}""".format(wxPythonDownload))
 
 try:
     import wx
@@ -95,10 +98,10 @@ def _run(inpath=None, updatecheck=True, debug_console=False):
     except ImportError:
         _show_old_wxpython_warning_if_needed()
         raise
+    _show_old_wxpython_warning_if_needed()
     if inpath:
         inpath = unicode(inpath, sys.getfilesystemencoding())
     ride = RIDE(inpath, updatecheck)
-    wx.CallAfter(_show_old_wxpython_warning_if_needed, ride.frame)
     if debug_console:
         debugconsole.start(ride)
     ride.MainLoop()
@@ -108,16 +111,12 @@ def _show_old_wxpython_warning_if_needed(parent=None):
     if wx.VERSION >= (2, 8, 12, 1, ''):
         if wx.VERSION > (2, 8, 12, 1, ''):
             title = "Please be aware of untested wxPython installation"
-            message = ("RIDE officially supports wxPython 2.8.12.1. Your "
-                       "current version is %s."
-                       "\n"
-                       "There are significant changes in newer wxPython "
-                       "versions. Notice that RIDE is still under development "
-                       "for wxPython 3.0.2 and newer (wxPython-Phoenix). "
-                       "wxPython 2.8.12.1 packages can be found from http://"
-                       "sourceforge.net/projects/wxpython/files/wxPython/"
-                       "2.8.12.1/."
-                       % wx.VERSION_STRING)
+            message = """
+RIDE officially supports wxPython 2.8.12.1. Your current version is {0}.
+
+There are significant changes in newer wxPython versions. Notice that RIDE is
+still under development for wxPython 3.0.2 and newer (wxPython-Phoenix).
+{1}""".format(wx.VERSION_STRING, wxPythonDownload)
             style = wx.OK | wx.ICON_INFORMATION | wx.CENTER
             if not parent:
                 _ = wx.App()
@@ -127,15 +126,12 @@ def _show_old_wxpython_warning_if_needed(parent=None):
                              style=style).ShowModal()
     else:
         title = "Please upgrade your wxPython installation"
-        message = ("RIDE officially supports wxPython 2.8.12.1. Your current "
-                   "version is %s."
-                   "\n"
-                   "Older wxPython versions are known to miss some features "
-                   "used by RIDE. Notice also that wxPython 3.0 is considered "
-                   "experimental. wxPython 2.8.12.1 packages can be found from"
-                   " http://sourceforge.net/projects/wxpython/files/wxPython/"
-                   "2.8.12.1/."
-                   % wx.VERSION_STRING)
+        message = """
+RIDE officially supports wxPython 2.8.12.1. Your current version is %{0}.
+
+Older wxPython versions are known to miss some features used by RIDE.
+Notice also that wxPython 3.0 is considered experimental.
+{1}""".format(wx.VERSION_STRING, wxPythonDownload)
         style = wx.ICON_EXCLAMATION
         if not parent:
             _ = wx.App()
