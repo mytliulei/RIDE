@@ -65,7 +65,8 @@ and shortcut by enabling/disabling those with `action.Action.enable` and
 `action.Action.disable` methods. Action is returned by 
 `pluginapi.Plugin.register_action` method.
 """
+from __future__ import absolute_import
 
 
-from actioninfo import ActionInfoCollection, SeparatorInfo, ActionInfo
-from action import ActionFactory
+from .actioninfo import ActionInfoCollection, SeparatorInfo, ActionInfo
+from .action import ActionFactory

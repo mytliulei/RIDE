@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -224,7 +226,7 @@ class _BaseTestLibrary(object):
         try:
             handler = self._create_handler(name, method)
         except DataError as err:
-            self._report_adding_keyword_failed(name, unicode(err), level='ERROR')
+            self._report_adding_keyword_failed(name, str(err), level='ERROR')
             return None, False
         except:
             self._report_adding_keyword_failed(name)
@@ -232,7 +234,7 @@ class _BaseTestLibrary(object):
         try:
             return self._get_possible_embedded_args_handler(handler)
         except DataError as err:
-            self._report_adding_keyword_failed(handler.name, unicode(err),
+            self._report_adding_keyword_failed(handler.name, str(err),
                                                level='ERROR')
             return None, False
 
@@ -255,7 +257,7 @@ class _BaseTestLibrary(object):
         msg, details = get_error_details()
         if self.positional_args or self.named_args:
             args = self.positional_args \
-                + ['%s=%s' % item for item in self.named_args.items()]
+                + ['%s=%s' % item for item in list(self.named_args.items())]
             args_text = 'arguments %s' % seq2str2(args)
         else:
             args_text = 'no arguments'

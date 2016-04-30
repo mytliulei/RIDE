@@ -1,3 +1,4 @@
+from builtins import filter
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -84,7 +85,7 @@ class Filter(EmptySuiteRemover):
         return True
 
     def _filter(self, suite, filter):
-        return [t for t in suite.tests if filter(t)]
+        return [t for t in suite.tests if list(filter(t))]
 
     def _included_by_test_name(self, test):
         return self.include_tests.match(test.name, test.longname)
@@ -95,6 +96,6 @@ class Filter(EmptySuiteRemover):
     def _not_excluded_by_tags(self, test):
         return not self.exclude_tags.match(test.tags)
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.include_suites or self.include_tests or
                     self.include_tags or self.exclude_tags)

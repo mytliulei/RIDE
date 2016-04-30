@@ -63,6 +63,7 @@ internally by Robot Framework itself. Some good examples are
 :class:`~robot.model.tagsetter.TagSetter` and
 :mod:`keyword removers <robot.result.keywordremover>`.
 """
+from builtins import object
 
 
 class SuiteVisitor(object):

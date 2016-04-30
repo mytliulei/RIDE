@@ -1,3 +1,5 @@
+from builtins import chr
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -116,7 +118,7 @@ class _ContentAssistTextCtrlBase(object):
                 self.hide()
                 return False
             else:
-                value += unichr(event.GetRawKeyCode())
+                value += chr(event.GetRawKeyCode())
         (self.gherkin_prefix, value) = self._remove_bdd_prefix(value)
         return self._popup.content_assist_for(value, row=self._row)
 

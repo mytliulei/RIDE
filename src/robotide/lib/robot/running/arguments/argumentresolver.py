@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -128,6 +129,6 @@ class VariableReplacer(object):
 
     def _get_replaced_named(self, item, replace_scalar):
         if not isinstance(item, tuple):
-            return replace_scalar(item).items()
+            return list(replace_scalar(item).items())
         name, value = item
         return [(replace_scalar(name), replace_scalar(value))]

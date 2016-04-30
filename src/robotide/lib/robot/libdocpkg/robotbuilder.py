@@ -1,3 +1,5 @@
+from builtins import zip
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -95,7 +97,7 @@ class KeywordDocBuilder(object):
 
     def _get_args(self, argspec):
         required = argspec.positional[:argspec.minargs]
-        defaults = zip(argspec.positional[argspec.minargs:], argspec.defaults)
+        defaults = list(zip(argspec.positional[argspec.minargs:], argspec.defaults))
         args = required + ['%s=%s' % item for item in defaults]
         if argspec.varargs:
             args.append('*%s' % argspec.varargs)

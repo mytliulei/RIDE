@@ -1,3 +1,4 @@
+from builtins import str
 import unittest
 import os
 
@@ -69,7 +70,7 @@ and even triple quotes \"\"\" '''
              'int': 1, 'float': 2.4})
 
     def _test_settings_types(self, expected):
-        for key, value in expected.items():
+        for key, value in list(expected.items()):
             self.settings[key] = value
         self.assertEqual(expected, self._read_settings()._config_obj)
 
@@ -362,7 +363,7 @@ class TestMergeSettings(TestSettingsHelper):
     def test_merge_fails_reasonably_when_settings_file_is_read_only(self):
         try:
             SettingsMigrator(self.settings_path, self.read_only_path).merge()
-        except RuntimeError, e:
+        except RuntimeError as e:
             self.assertTrue(str(e).startswith('Could not open'))
         else:
             raise AssertionError('merging read-only file succeeded')

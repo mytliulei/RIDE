@@ -1,6 +1,8 @@
+from future import standard_library
+standard_library.install_aliases()
 import unittest
 import time
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from robotide.application.updatenotifier import UpdateNotifierController
 
 
@@ -95,7 +97,7 @@ class UpdateNotifierTestCase(unittest.TestCase):
         settings = self._settings()
         ctrl = UpdateNotifierController(settings)
         def throwTimeoutError():
-            raise urllib2.URLError('timeout')
+            raise urllib.error.URLError('timeout')
         ctrl._get_newest_version = throwTimeoutError
         ctrl.notify_update_if_needed(self._callback)
         self.assertTrue(settings['last update check'] > time.time() - 1)
@@ -107,7 +109,7 @@ class UpdateNotifierTestCase(unittest.TestCase):
         ctrl.VERSION = '0'
         ctrl._get_newest_version = lambda: '1'
         def throwTimeoutError(*args):
-            raise urllib2.URLError('timeout')
+            raise urllib.error.URLError('timeout')
         ctrl._get_download_url = throwTimeoutError
         ctrl.notify_update_if_needed(self._callback)
         self.assertTrue(settings['last update check'] > time.time() - 1)

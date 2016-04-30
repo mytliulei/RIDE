@@ -1,10 +1,11 @@
+from __future__ import absolute_import
 import unittest
 from nose.tools import assert_true, assert_false, assert_equals
 from robotide.controller.tags import DefaultTag
 from robotide.controller.commands import *
 
-from base_command_test import TestCaseCommandTest
-from controller_creator import *
+from .base_command_test import TestCaseCommandTest
+from .controller_creator import *
 
 
 class UnmodifyingCommandsTest(unittest.TestCase):

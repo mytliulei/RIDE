@@ -1,3 +1,6 @@
+from __future__ import print_function
+from builtins import str
+from builtins import range
 import unittest
 import datafilereader
 from nose.tools import assert_equals, assert_false, assert_true
@@ -9,7 +12,7 @@ class TestLocalNamespace(unittest.TestCase):
         self._project = datafilereader.construct_project(datafilereader.SIMPLE_PROJECT)
         self._test = datafilereader.get_ctrl_by_name('Test Case', self._project.datafiles[0].tests)
         self._keyword = datafilereader.get_ctrl_by_name('Keyword', self._project.datafiles[0].keywords)
-        print self._keyword
+        print(self._keyword)
 
     def tearDown(self):
         self._project.close()

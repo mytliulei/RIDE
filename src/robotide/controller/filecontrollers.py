@@ -1,3 +1,7 @@
+from future import standard_library
+standard_library.install_aliases()
+from past.builtins import basestring
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +19,7 @@
 import os
 from itertools import chain
 import shutil
-import commands
+import subprocess
 from robotide.controller.dataloader import ExcludedDirectory, TestData
 
 from robotide.publish import (RideDataFileRemoved, RideInitFileRemoved,
@@ -261,7 +265,7 @@ class _DataController(_BaseController, WithUndoRedoStacks, WithNamespace):
         old_file = self.filename
         self.data.source = os.path.join(self.directory, '%s.%s' % (basename, self.get_format()))
         self.filename = self.data.source
-        self.execute(commands.SaveFile())
+        self.execute(subprocess.SaveFile())
         if old_file != self.filename:
             self.remove_from_filesystem(old_file)
 

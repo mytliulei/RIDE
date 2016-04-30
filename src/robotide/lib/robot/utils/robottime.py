@@ -1,3 +1,6 @@
+from __future__ import division
+from builtins import object
+from past.utils import old_div
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -61,7 +64,7 @@ def _timer_to_secs(number):
     if hours:
         seconds += float(hours[:-1]) * 60 * 60
     if millis:
-        seconds += float(millis[1:]) / 10**len(millis[1:])
+        seconds += old_div(float(millis[1:]), 10**len(millis[1:]))
     if prefix == '-':
         seconds *= -1
     return seconds
@@ -89,7 +92,7 @@ def _time_string_to_secs(timestr):
             return None
     if temp:
         return None
-    return sign * (millis/1000 + secs + mins*60 + hours*60*60 + days*60*60*24)
+    return sign * (old_div(millis,1000) + secs + mins*60 + hours*60*60 + days*60*60*24)
 
 def _normalize_timestr(timestr):
     timestr = normalize(timestr)
@@ -122,7 +125,7 @@ def secs_to_timestr(secs, compact=False):
     """
     return _SecsToTimestrHelper(secs, compact).get_value()
 
-class _SecsToTimestrHelper:
+class _SecsToTimestrHelper(object):
 
     def __init__(self, float_secs, compact):
         self._compact = compact
@@ -157,9 +160,9 @@ class _SecsToTimestrHelper:
             sign = ''
         int_secs, millis = _float_secs_to_secs_and_millis(float_secs)
         secs  = int_secs % 60
-        mins  = int(int_secs / 60) % 60
-        hours = int(int_secs / (60*60)) % 24
-        days  = int(int_secs / (60*60*24))
+        mins  = int(old_div(int_secs, 60)) % 60
+        hours = int(old_div(int_secs, (60*60))) % 24
+        days  = int(old_div(int_secs, (60*60*24)))
         return sign, millis, secs, mins, hours, days
 
 
@@ -195,7 +198,7 @@ def _diff_to_gmt(sep):
         sign = '-'
     else:
         sign = '+'
-    minutes = abs(time.altzone) / 60.0
+    minutes = old_div(abs(time.altzone), 60.0)
     hours, minutes = divmod(minutes, 60)
     return '%sGMT%s%s%02d:%02d' % (sep, sep, sign, hours, minutes)
 
@@ -307,7 +310,7 @@ def get_timestamp(daysep='', daytimesep=' ', timesep=':', millissep='.'):
 
 def timestamp_to_secs(timestamp, seps=None):
     try:
-        secs = _timestamp_to_millis(timestamp, seps) / 1000.0
+        secs = old_div(_timestamp_to_millis(timestamp, seps), 1000.0)
     except (ValueError, OverflowError):
         raise ValueError("Invalid timestamp '%s'" % timestamp)
     else:
@@ -356,7 +359,7 @@ def _elapsed_time_to_string(elapsed):
     return '%02d:%02d:%02d.%03d' % (hours, mins, secs, millis)
 
 def _elapsed_time_to_string_without_millis(elapsed):
-    secs = int(round(elapsed, -3)) / 1000
+    secs = old_div(int(round(elapsed, -3)), 1000)
     mins, secs = divmod(secs, 60)
     hours, mins = divmod(mins, 60)
     return '%02d:%02d:%02d' % (hours, mins, secs)

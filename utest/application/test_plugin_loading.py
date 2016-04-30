@@ -1,3 +1,4 @@
+from builtins import object
 import os
 import unittest
 from nose.tools import assert_true, assert_false

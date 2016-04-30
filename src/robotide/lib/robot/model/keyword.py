@@ -25,7 +25,7 @@ from .tags import Tags
 
 class Keyword(ModelObject):
     """Base model for single keyword."""
-    __slots__ = ['parent', '_name', 'doc', 'args', 'assign', 'tags', 'timeout',
+    __slots__ = ['_parent', '_name', 'doc', 'args', 'assign', '_tags', 'timeout',
                  'type', '_sort_key', '_next_child_sort_key']
     KEYWORD_TYPE = 'kw'
     SETUP_TYPE = 'setup'
@@ -115,7 +115,7 @@ class Keywords(ItemList):
     __slots__ = []
 
     def __init__(self, keyword_class=Keyword, parent=None, keywords=None):
-        ItemList.__init__(self, keyword_class, {'parent': parent}, keywords)
+        ItemList.__init__(self, keyword_class, {'_parent': parent}, keywords)
 
     @property
     def setup(self):
@@ -132,7 +132,7 @@ class Keywords(ItemList):
     @property
     def normal(self):
         kws = [kw for kw in self if kw.type not in ('setup', 'teardown')]
-        return Keywords(self._item_class, self._common_attrs['parent'], kws)
+        return Keywords(self._item_class, self._common_attrs['_parent'], kws)
 
     def __setitem__(self, index, item):
         old = self[index]

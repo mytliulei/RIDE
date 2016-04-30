@@ -1,3 +1,7 @@
+from builtins import zip
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");

@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -76,11 +77,11 @@ class YamlImporter(object):
         if not is_dict_like(variables):
             raise DataError('YAML variable file must be a mapping, got %s.'
                             % type_name(variables))
-        return variables.items()
+        return list(variables.items())
 
     def _dot_dict(self, value):
         if is_dict_like(value):
-            value = DotDict((n, self._dot_dict(v)) for n, v in value.items())
+            value = DotDict((n, self._dot_dict(v)) for n, v in list(value.items()))
         return value
 
 
@@ -107,7 +108,7 @@ class PythonImporter(object):
                          getattr(var_file, 'getVariables'))
         variables = get_variables(*args)
         if is_dict_like(variables):
-            return variables.items()
+            return list(variables.items())
         raise DataError("Expected '%s' to return dict-like value, got %s."
                         % (get_variables.__name__, type_name(variables)))
 

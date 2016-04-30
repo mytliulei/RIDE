@@ -1,11 +1,12 @@
+from __future__ import absolute_import
 # The following import is needed for wx.select() to work properly
 import robotide as _
 import os
 import sys
 import wx
 
-from mocks import FakeSettings, FakeApplication, MessageRecordingLoadObserver
-from setting_utils import TestSettingsHelper
+from .mocks import FakeSettings, FakeApplication, MessageRecordingLoadObserver
+from .setting_utils import TestSettingsHelper
 
 if os.sep == '\\':
     CIF = True

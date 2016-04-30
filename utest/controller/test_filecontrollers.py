@@ -1,3 +1,5 @@
+from __future__ import print_function
+from builtins import object
 import unittest
 import os
 import shutil
@@ -263,7 +265,7 @@ class DatafileIteratorTest(unittest.TestCase):
                 self.in_sub_dir = False
             def __call__(self, controller):
                 self.iteration_count += 1
-                print controller.filename
+                print(controller.filename)
                 if controller.filename and controller.filename.endswith('test.txt'):
                     self.in_sub_dir = True
         check_count_and_sub_dir = Checker()

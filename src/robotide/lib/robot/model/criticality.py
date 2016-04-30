@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,5 +36,5 @@ class Criticality(object):
             return False
         return not self.non_critical_tags.match(test.tags)
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.critical_tags or self.non_critical_tags)

@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +16,7 @@
 import wx
 from wx.lib.agw import customtreectrl
 from wx.lib.mixins import treemixin
+from future.utils import with_metaclass
 try:
     from wx import ColorRGB as Colour
     TREETEXTCOLOUR = Colour(0xA9A9A9)  # wxPython 2.8.12
@@ -59,10 +61,8 @@ if IS_WINDOWS:
 
 # Metaclass fix from http://code.activestate.com/recipes/204197-solving-the-metaclass-conflict/
 from robotide.utils.noconflict import classmaker
-class Tree(treemixin.DragAndDrop, customtreectrl.CustomTreeCtrl,
-           utils.RideEventHandler):
-    __metaclass__ = classmaker()
-
+class Tree(with_metaclass(classmaker(), type('NewBase', (treemixin.DragAndDrop, customtreectrl.CustomTreeCtrl,
+           utils.RideEventHandler), {}))):
     _RESOURCES_NODE_LABEL = 'External Resources'
 
     def __init__(self, parent, action_registerer, settings=None):

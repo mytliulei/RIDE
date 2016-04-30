@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +30,7 @@ class _NamePatterns(object):
     def _match_longname(self, name):
         raise NotImplementedError
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self._matcher)
 
     def __iter__(self):

@@ -1,3 +1,4 @@
+from builtins import str
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +23,7 @@ from .robottypes import is_bytes, is_unicode
 def unic(item, *args):
     # Based on a recipe from http://code.activestate.com/recipes/466341
     try:
-        return unicode(item, *args)
+        return str(item, *args)
     except UnicodeError:
         try:
             return u''.join(c if ord(c) < 128 else c.encode('string_escape')

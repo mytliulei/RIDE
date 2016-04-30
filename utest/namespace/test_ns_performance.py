@@ -1,3 +1,6 @@
+from __future__ import division
+from builtins import range
+from past.utils import old_div
 import time
 import unittest
 
@@ -35,13 +38,13 @@ class TestNamespacePerformance(unittest.TestCase):
         assert_true(b > c or (c <= 0),
                     'Possibly o(n*2) or greater growth in user keyword performance measures!\nkw1000 time = %s kw2000 time = %s kw3000 time = %s'\
                      % (kw1000_result, kw2000_result, kw3000_result))
-        if c > 0 and (b <= 0 or c / b > self.RELEVANT_B_RELATIVE_TO_C):
+        if c > 0 and (b <= 0 or old_div(c, b) > self.RELEVANT_B_RELATIVE_TO_C):
             kw4000_result = self._execute_keyword_find_function_n_times('is_user_keyword', times, KW4000_TESTCASEFILE)
             self._verify_that_power2_estimate_overestimates(a, b, c, kw1000_result, kw2000_result, kw3000_result, kw4000_result)
 
     def _verify_that_power2_estimate_overestimates(self, a, b, c, kw1000_result, kw2000_result, kw3000_result, kw4000_result):
         def power2estimate(kw_amount):
-            x = kw_amount / 1000
+            x = old_div(kw_amount, 1000)
             return a + b * x + c * x**2
         assert_true(power2estimate(4000) * self.SAFETY_MARGIN > kw4000_result,
                    'Possibly o(n*2) or greater growth in namespace performance measures!\nkw1000 time = %s kw2000 time = %s kw3000 time = %s kw4000 time = %s'\
@@ -65,7 +68,7 @@ class TestNamespacePerformance(unittest.TestCase):
         # 0 1 0 [b] = kw2000_result-kw1000_result - 3*c
         # -- reduce [b]
         # a = kw1000_result - c - b
-        c = (kw3000_result-kw1000_result-2*(kw2000_result-kw1000_result))/2
+        c = old_div((kw3000_result-kw1000_result-2*(kw2000_result-kw1000_result)),2)
         b = kw2000_result-kw1000_result - 3*c
         a = kw1000_result - c - b
         return a, b, c

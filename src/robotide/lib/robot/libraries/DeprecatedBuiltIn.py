@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +19,7 @@ import fnmatch
 from robotide.lib.robot.utils import asserts, printable_name
 
 from .BuiltIn import BuiltIn
+from future.utils import with_metaclass
 
 
 BUILTIN = BuiltIn()
@@ -26,7 +28,7 @@ BUILTIN = BuiltIn()
 class deprecator(type):
     def __new__(cls, class_name, bases, dct):
         use_instead_library = class_name[len('Deprecated'):]
-        for name, func in dct.items():
+        for name, func in list(dct.items()):
             if cls._should_be_deprecated(name, func):
                 dct[name] = cls._deprecate(func, use_instead_library)
         return type.__new__(cls, class_name, bases, dct)
@@ -46,9 +48,7 @@ class deprecator(type):
         return deprecated
 
 
-class DeprecatedBuiltIn(object):
-    __metaclass__ = deprecator
-
+class DeprecatedBuiltIn(with_metaclass(deprecator, object)):
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     integer = BUILTIN.convert_to_integer

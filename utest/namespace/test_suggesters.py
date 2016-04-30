@@ -1,3 +1,4 @@
+from builtins import object
 import unittest
 from robotide.controller.filecontrollers import ResourceFileController
 from robotide.namespace.suggesters import ResourceSuggester, CachedLibrarySuggester, BuiltInLibrariesSuggester, LibrariesSuggester, HistorySuggester

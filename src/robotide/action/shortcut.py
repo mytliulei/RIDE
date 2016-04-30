@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,7 +58,7 @@ def localize_shortcuts(string):
 def _replace_mac_chars(string):
     if not IS_MAC or not string:
         return string
-    for key, value in _REPLACE.items():
+    for key, value in list(_REPLACE.items()):
         string = string.replace(key, value)
     return string
 
@@ -74,7 +75,7 @@ class Shortcut(object):
     def _replace_chars_in_mac(self, shortcut):
         return _replace_mac_chars(shortcut)
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.value)
 
     def _normalize(self, shortcut):

@@ -1,3 +1,4 @@
+from builtins import str
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,4 +49,4 @@ class ModelModifier(SuiteVisitor):
                     name, args = split_args_from_name_or_path(visitor)
                     yield importer.import_class_or_module(name, args)
             except DataError as err:
-                self._log_error(unicode(err))
+                self._log_error(str(err))

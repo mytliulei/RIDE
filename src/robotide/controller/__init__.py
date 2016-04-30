@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +15,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from project import Project
-from commands import FindOccurrences, RenameKeywordOccurrences
-from dataloader import DataLoader
-from filecontrollers import DataController, ResourceFileController
-from tablecontrollers import UserKeywordController
+from .project import Project
+# unused import
+# from subprocess import FindOccurrences, RenameKeywordOccurrences
+from .dataloader import DataLoader
+from .filecontrollers import DataController, ResourceFileController
+from .tablecontrollers import UserKeywordController

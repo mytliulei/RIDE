@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +18,7 @@ import inspect
 from robotide.lib.robot.utils import NormalizedDict
 
 
-class _RunKeywordRegister:
+class _RunKeywordRegister(object):
 
     def __init__(self):
         self._libs = {}
@@ -40,9 +41,9 @@ class _RunKeywordRegister:
 
     def _get_args_from_method(self, method):
         if inspect.ismethod(method):
-            return method.im_func.func_code.co_argcount - 1
+            return method.__func__.__code__.co_argcount - 1
         elif inspect.isfunction(method):
-            return method.func_code.co_argcount
+            return method.__code__.co_argcount
         raise ValueError('Needs function or method')
 
 

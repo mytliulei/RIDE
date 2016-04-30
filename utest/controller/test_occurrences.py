@@ -105,7 +105,7 @@ def _first_occurrence(test_ctrl, kw_name):
     occurrences = test_ctrl.execute(FindOccurrences(kw_name))
     if not occurrences:
         raise AssertionError('No occurrences found for "%s"' % kw_name)
-    return occurrences.next()
+    return next(occurrences)
 
 
 def _get_ctrl_by_name(self, name, datafiles):

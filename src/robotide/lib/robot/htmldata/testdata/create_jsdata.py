@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
 from os.path import abspath, dirname, normpath, join
 import os
 import sys
@@ -52,8 +53,8 @@ def create_jsdata(outxml, target):
     with open(target, 'wb') as output:
         writer = JsResultWriter(output, start_block='', end_block='')
         writer.write(result, config)
-    print 'Log:    ', normpath(join(BASEDIR, '..', 'rebot', 'log.html'))
-    print 'Report: ', normpath(join(BASEDIR, '..', 'rebot', 'report.html'))
+    print('Log:    ', normpath(join(BASEDIR, '..', 'rebot', 'log.html')))
+    print('Report: ', normpath(join(BASEDIR, '..', 'rebot', 'report.html')))
 
 
 if __name__ == '__main__':

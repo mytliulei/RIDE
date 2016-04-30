@@ -1,3 +1,4 @@
+from builtins import range
 import unittest
 import datafilereader
 from robotide.controller.commands import ChangeCellValue, DeleteRows, AddKeyword,\

@@ -1,3 +1,4 @@
+from __future__ import print_function
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -85,7 +86,7 @@ class LogPlugin(Plugin):
         if self._panel:
             self._panel.update_log()
         if self.log_to_console:
-            print >> sys.stdout, _message_to_string(log_event)
+            print(_message_to_string(log_event), file=sys.stdout)
         if self.log_to_file:
             self._logfile.write(_message_to_string(log_event))
         if log_event.notify_user:

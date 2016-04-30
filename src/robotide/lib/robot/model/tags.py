@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -61,7 +63,7 @@ class Tags(object):
         return repr(list(self))
 
     def __str__(self):
-        return unicode(self).encode('UTF-8')
+        return str(self).encode('UTF-8')
 
     def __getitem__(self, index):
         item = self._tags[index]
@@ -114,7 +116,7 @@ class _SingleTagPattern(object):
     def __unicode__(self):
         return self._matcher.pattern
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self._matcher)
 
 

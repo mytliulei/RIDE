@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,7 +37,7 @@ class NullPopulator(Populator):
     def populate(self):
         pass
 
-    def __nonzero__(self):
+    def __bool__(self):
         return False
 
 
@@ -89,9 +90,9 @@ class SettingTablePopulator(_TablePopulator):
         setter = self._table.get_setter(row.head)
         if not setter:
             return NullPopulator()
-        if setter.im_class is Documentation:
+        if setter.__self__.__class__ is Documentation:
             return DocumentationPopulator(setter)
-        if setter.im_class is MetadataList:
+        if setter.__self__.__class__ is MetadataList:
             return MetadataPopulator(setter)
         return SettingPopulator(setter)
 
@@ -214,7 +215,7 @@ class _TestCaseUserKeywordPopulator(Populator):
             setter = self._setting_setter(row)
             if not setter:
                 return NullPopulator()
-            if setter.im_class is Documentation:
+            if setter.__self__.__class__ is Documentation:
                 return DocumentationPopulator(setter)
             return SettingPopulator(setter)
         if row.starts_for_loop():

@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,14 +15,13 @@
 
 from .DeprecatedBuiltIn import deprecator
 from .OperatingSystem import OperatingSystem
+from future.utils import with_metaclass
 
 
 OS = OperatingSystem()
 
 
-class DeprecatedOperatingSystem(object):
-    __metaclass__ = deprecator
-
+class DeprecatedOperatingSystem(with_metaclass(deprecator, object)):
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     delete_environment_variable = OS.remove_environment_variable

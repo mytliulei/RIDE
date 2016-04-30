@@ -1,3 +1,6 @@
+from __future__ import division
+from past.utils import old_div
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,7 +72,7 @@ class StatusReporter(SuiteVisitor):
         self._stream.write("%s\nRun suite '%s' with %d test%s in %s.\n\n"
                            % ('=' * self._width, suite.name,
                               stats.all.total, plural_or_not(stats.all.total),
-                              secs_to_timestr(suite.elapsedtime/1000.0)))
+                              secs_to_timestr(old_div(suite.elapsedtime,1000.0))))
         self._stream.highlight(suite.status + 'ED', suite.status)
         self._stream.write('\n%s\n' % stats.message)
 

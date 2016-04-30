@@ -28,6 +28,8 @@ To see RIDE's version use --version.
 RIDE's API is still evolving while the project is moving towards the 1.0
 release. The most stable, and best documented, module is `robotide.pluginapi`.
 """
+from __future__ import print_function
+from builtins import str
 
 import sys
 import os
@@ -96,7 +98,7 @@ def _run(inpath=None, updatecheck=True, debug_console=False):
         _show_old_wxpython_warning_if_needed()
         raise
     if inpath:
-        inpath = unicode(inpath, sys.getfilesystemencoding())
+        inpath = str(inpath, sys.getfilesystemencoding())
     ride = RIDE(inpath, updatecheck)
     if wx.VERSION <= (2, 8, 12, 1, ''):
         _show_old_wxpython_warning_if_needed(ride.frame)

@@ -1,3 +1,5 @@
+from builtins import str
+from past.builtins import basestring
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +25,7 @@ def import_varfile(varfile_path, args):
     except SystemExit:
         raise robotapi.DataError('Variable file import failed')
     return [(name, _format_value(value), varfile_path)
-            for (name, value) in temp.store.data.items()]
+            for (name, value) in list(temp.store.data.items())]
 
 
 # Must be picklable
@@ -31,5 +33,5 @@ def _format_value(value):
     if isinstance(value, basestring):
         return value
     if isinstance(value, list):
-        return u'[ %s ]' % u' | '.join(unicode(v) for v in value)
-    return unicode(value)
+        return u'[ %s ]' % u' | '.join(str(v) for v in value)
+    return str(value)

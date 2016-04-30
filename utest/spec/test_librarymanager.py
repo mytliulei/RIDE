@@ -1,3 +1,6 @@
+from __future__ import division
+from __future__ import absolute_import
+from past.utils import old_div
 import os
 import unittest
 import sys
@@ -25,7 +28,7 @@ class TestLibraryManager(unittest.TestCase):
         self.assertFalse(self._library_manager._keywords_differ(keywords, self._keywords))
 
     def test_manager_handles_callback_exception(self):
-        self._library_manager.fetch_keywords('Collections', '', (lambda *_: 1/0))
+        self._library_manager.fetch_keywords('Collections', '', (lambda *_: old_div(1,0)))
         self._library_manager._handle_message()
         self._library_manager.fetch_keywords('BuiltIn', '', self._callback)
         self._library_manager._handle_message()
@@ -42,7 +45,7 @@ class TestLibraryManager(unittest.TestCase):
         self.assertEqual(len(self._keywords), 3)
 
     def test_manager_handler_library_that_throws_timeout_exception(self):
-        import Exceptional as e
+        from . import Exceptional as e
         self._library_manager.fetch_keywords(e.__file__, '', self._callback)
         self._library_manager._handle_message()
         self.assertEqual(self._keywords, [])

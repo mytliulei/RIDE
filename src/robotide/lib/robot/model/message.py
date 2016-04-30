@@ -24,7 +24,7 @@ class Message(ModelObject):
     The message can be a log message triggered by a keyword, or a warning
     or an error occurred during the test execution.
     """
-    __slots__ = ['message', 'level', 'html', 'timestamp', 'parent', '_sort_key']
+    __slots__ = ['message', 'level', 'html', 'timestamp', '_parent', '_sort_key']
 
     def __init__(self, message='', level='INFO', html=False, timestamp=None,
                  parent=None):
@@ -43,7 +43,7 @@ class Message(ModelObject):
 
     @setter
     def parent(self, parent):
-        if parent and parent is not getattr(self, 'parent', None):
+        if parent and parent is not getattr(self, '_parent', None):
             self._sort_key = getattr(parent, '_child_sort_key', -1)
         return parent
 
@@ -63,7 +63,7 @@ class Messages(ItemList):
     __slots__ = []
 
     def __init__(self, message_class=Message, parent=None, messages=None):
-        ItemList.__init__(self, message_class, {'parent': parent}, messages)
+        ItemList.__init__(self, message_class, {'_parent': parent}, messages)
 
     def __setitem__(self, index, item):
         old = self[index]

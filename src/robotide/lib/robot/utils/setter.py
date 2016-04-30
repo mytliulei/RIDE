@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +40,7 @@ class SetterAwareType(type):
     def __new__(cls, name, bases, dct):
         slots = dct.get('__slots__')
         if slots is not None:
-            for item in dct.values():
+            for item in list(dct.values()):
                 if isinstance(item, setter):
                     slots.append(item.attr_name)
         return type.__new__(cls, name, bases, dct)

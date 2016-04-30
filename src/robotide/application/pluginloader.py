@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +21,7 @@ import inspect
 from robotide.context import LOG
 from robotide.pluginapi import Plugin
 
-from pluginconnector import PluginFactory
+from .pluginconnector import PluginFactory
 
 
 class PluginLoader(object):
@@ -46,7 +48,7 @@ class PluginLoader(object):
     def _is_plugin_class(self, path, cls):
         try:
             return issubclass(cls, Plugin) and cls is not Plugin
-        except Exception, err:
+        except Exception as err:
             msg = "Finding classes from module '%s' failed: %s"
             self._load_errors.append(msg % (path, err))
 
@@ -75,7 +77,7 @@ class PluginLoader(object):
             try:
                 module = imp.load_module(modulename, file, imppath,
                                          description)
-            except Exception, err:
+            except Exception as err:
                 self._load_errors.append("Importing plugin module '%s' failed:\n%s"
                                          % (path, err))
                 return []

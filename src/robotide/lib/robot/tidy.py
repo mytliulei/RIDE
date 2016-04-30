@@ -27,6 +27,10 @@ Instead of ``python`` it is possible to use also other Python interpreters.
 This module also provides :class:`Tidy` class and :func:`tidy_cli` function
 that can be used programmatically. Other code is for internal usage.
 """
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 
 USAGE = """robot.tidy -- Robot Framework test data clean-up tool
 
@@ -113,12 +117,12 @@ http://robotframework.org/robotframework/#built-in-tools.
 
 import os
 import sys
-from StringIO import StringIO
+from io import StringIO
 
 # Allows running as a script. __name__ check needed with multiprocessing:
 # http://code.google.com/p/robotframework/issues/detail?id=1137
 if 'robot' not in sys.modules and __name__ == '__main__':
-    import pythonpathsetter
+    from . import pythonpathsetter
 
 from robotide.lib.robot.errors import DataError
 from robotide.lib.robot.parsing import (ResourceFile, TestDataDirectory, TestCaseFile,

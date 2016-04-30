@@ -16,6 +16,7 @@
 
 External libraries should not used exceptions defined here.
 """
+from builtins import str
 
 
 # Return codes from Robot and Rebot.
@@ -147,7 +148,7 @@ class HandlerExecutionFailed(ExecutionFailed):
 class ExecutionFailures(ExecutionFailed):
 
     def __init__(self, errors, message=None):
-        message = message or self._format_message([unicode(e) for e in errors])
+        message = message or self._format_message([str(e) for e in errors])
         ExecutionFailed.__init__(self, message, **self._get_attrs(errors))
         self._errors = errors
 
@@ -184,8 +185,8 @@ class UserKeywordExecutionFailed(ExecutionFailures):
         return [err for err in errors if err]
 
     def _get_message(self, run_errors, teardown_errors):
-        run_msg = unicode(run_errors or '')
-        td_msg = unicode(teardown_errors or '')
+        run_msg = str(run_errors or '')
+        td_msg = str(teardown_errors or '')
         if not td_msg:
             return run_msg
         if not run_msg:

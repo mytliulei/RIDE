@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -92,7 +94,7 @@ class Logger(AbstractLogger):
         try:
             logger = FileLogger(path, level)
         except DataError as err:
-            self.error("Opening syslog file '%s' failed: %s" % (path, unicode(err)))
+            self.error("Opening syslog file '%s' failed: %s" % (path, str(err)))
         else:
             self.register_logger(logger)
 

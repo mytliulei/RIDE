@@ -1,3 +1,6 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +16,7 @@
 #  limitations under the License.
 
 import sys
-from StringIO import StringIO
+from io import StringIO
 
 from robotide.lib.robot.output import LOGGER
 from robotide.lib.robot.utils import decode_output, encode_output, JYTHON

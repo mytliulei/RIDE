@@ -22,6 +22,7 @@ drop-down list within the plugin. The chosen profile will be used to
 build up a command that will be passed in the tests to run as well as
 any additional arguments.
 '''
+from builtins import object
 
 import wx
 from wx.lib.filebrowsebutton import FileBrowseButton
@@ -250,7 +251,7 @@ class PybotProfile(BaseProfile):
         self.set_setting("arguments", args)
 
     def _validate_arguments(self, args):
-        assert type(args) is unicode
+        assert type(args) is str
         invalid_message = self._get_invalid_message(args)
         self._arguments.SetBackgroundColour(
             'red' if invalid_message else 'white')
@@ -274,7 +275,7 @@ class PybotProfile(BaseProfile):
             if bool(invalid):
                 return 'Unknown option(s): '+' '.join(invalid)
             return None
-        except DataError, e:
+        except DataError as e:
             return e.message
         except Information:
             return 'Does not execute - help or version option given'

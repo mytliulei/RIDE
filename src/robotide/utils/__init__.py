@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,8 +26,8 @@ from robotide.lib.robot.utils import printable_name, normalize, eq, ET, \
     get_timestamp, Matcher, is_list_like, is_dict_like, decode_from_system,\
     ArgumentParser, get_error_details
 
-from eventhandler import RideEventHandler
-from printing import Printing
+from .eventhandler import RideEventHandler
+from .printing import Printing
 
 
 def html_format(text):

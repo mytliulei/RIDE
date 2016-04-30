@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +14,7 @@
 #  limitations under the License.
 
 import wx
+from future.utils import with_metaclass
 
 
 class eventhandlertype(type):
@@ -33,8 +35,7 @@ class eventhandlertype(type):
         return type.__new__(cls, name, bases, dict)
 
 
-class RideEventHandler(object):
-    __metaclass__ = eventhandlertype
+class RideEventHandler(with_metaclass(eventhandlertype, object)):
     _SHOWING_MODIFIED_ON_DISK_CONTROLLERS_ = set()
     _SHOWING_REMOVED_ON_DISK_CONTROLLERS_ = set()
 

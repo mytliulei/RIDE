@@ -292,6 +292,9 @@ Additionally helper classes ``Date`` and ``Time`` can be used directly:
 |     interval = Time(interval).convert('number')
 |     # ...
 """
+from __future__ import division
+from builtins import object
+from past.utils import old_div
 
 from datetime import datetime, timedelta
 import time
@@ -547,7 +550,7 @@ class Date(object):
         micro = re.search('\d+$', ts).group(0)
         ts = ts[:-len(micro)]
         epoch = time.mktime(time.strptime(ts, input_format))
-        epoch += float(micro) / 10**len(micro)
+        epoch += old_div(float(micro), 10**len(micro))
         return epoch
 
     def _remove_f_from_format(self, format):
@@ -557,7 +560,7 @@ class Date(object):
         return format[:-2]
 
     def _mktime_with_millis(self, dt):
-        return time.mktime(dt.timetuple()) + dt.microsecond / 1e6
+        return time.mktime(dt.timetuple()) + old_div(dt.microsecond, 1e6)
 
     def convert(self, format, millis=True):
         seconds = self.seconds if millis else round(self.seconds)
@@ -625,7 +628,7 @@ class Time(object):
             # timedelta.total_seconds() is new in Python 2.7
             return (time.days * 24 * 60 * 60 +
                     time.seconds +
-                    time.microseconds / 1e6)
+                    old_div(time.microseconds, 1e6))
         return timestr_to_secs(time, round_to=None)
 
     @property

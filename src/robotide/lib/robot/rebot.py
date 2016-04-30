@@ -29,6 +29,7 @@ This module is also used by the installed ``rebot``, ``jyrebot`` and
 This module also provides :func:`rebot` and :func:`rebot_cli` functions
 that can be used programmatically. Other code is for internal usage.
 """
+from __future__ import absolute_import
 
 USAGE = """Rebot -- Robot Framework report and log generator
 
@@ -326,7 +327,7 @@ import sys
 # Allows running as a script. __name__ check needed with multiprocessing:
 # http://code.google.com/p/robotframework/issues/detail?id=1137
 if 'robot' not in sys.modules and __name__ == '__main__':
-    import pythonpathsetter
+    from . import pythonpathsetter
 
 from robotide.lib.robot.conf import RebotSettings
 from robotide.lib.robot.errors import DataError

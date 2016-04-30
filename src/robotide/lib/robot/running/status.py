@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +24,7 @@ class Failure(object):
         self.test = None
         self.teardown = None
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.setup or self.test or self.teardown)
 
 
@@ -51,7 +53,7 @@ class Exit(object):
     def teardown_allowed(self):
         return not (self.skip_teardown_mode and self)
 
-    def __nonzero__(self):
+    def __bool__(self):
         return self.failure or self.error or self.fatal
 
 
@@ -68,13 +70,13 @@ class _ExecutionStatus(object):
 
     def setup_executed(self, failure=None):
         if failure and not isinstance(failure, PassExecution):
-            self.failure.setup = unicode(failure)
+            self.failure.setup = str(failure)
             self.exit.failure_occurred(failure)
         self._teardown_allowed = True
 
     def teardown_executed(self, failure=None):
         if failure and not isinstance(failure, PassExecution):
-            self.failure.teardown = unicode(failure)
+            self.failure.teardown = str(failure)
             self.exit.failure_occurred(failure)
 
     def critical_failure_occurred(self):
@@ -135,7 +137,7 @@ class TestStatus(_ExecutionStatus):
         self._critical = critical
 
     def test_failed(self, failure):
-        self.failure.test = unicode(failure)
+        self.failure.test = str(failure)
         self.exit.failure_occurred(failure, self._critical)
 
     def _my_message(self):

@@ -1,3 +1,7 @@
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +24,8 @@ from robotide.utils.versioncomparator import cmp_versions
 from robotide.widgets.button import ButtonWithHandler
 
 import time
-import urllib2
-import xmlrpclib
+import urllib.request, urllib.error, urllib.parse
+import xmlrpc.client
 import robotide.version as version
 
 _CHECK_FOR_UPDATES_SETTING = 'check for updates'
@@ -51,8 +55,8 @@ class UpdateNotifierController(object):
         try:
             self._newest_version = self._get_newest_version()
             self._download_url = self._get_download_url(self._newest_version)
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             #There are many possible errors:
             # - Timeout
             # - Corrupted data
@@ -68,8 +72,8 @@ class UpdateNotifierController(object):
         return self._get_response(('robotframework-ride', version), 'release_data')['download_url']
 
     def _get_response(self, params, method):
-        req = urllib2.Request('http://pypi.python.org/pypi', xmlrpclib.dumps(params, method), {'Content-Type':'text/xml'})
-        return xmlrpclib.loads(urllib2.urlopen(req, timeout=1).read())[0][0]
+        req = urllib.request.Request('http://pypi.python.org/pypi', xmlrpc.client.dumps(params, method), {'Content-Type':'text/xml'})
+        return xmlrpc.client.loads(urllib.request.urlopen(req, timeout=1).read())[0][0]
 
 
 class HtmlWindow(wx.html.HtmlWindow):

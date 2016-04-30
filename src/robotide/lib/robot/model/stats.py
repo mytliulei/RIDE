@@ -1,3 +1,6 @@
+from past.builtins import cmp
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,11 +52,11 @@ class Stat(object):
             attrs['elapsed'] = elapsed_time_to_string(self.elapsed,
                                                       include_millis=False)
         if exclude_empty:
-            attrs = dict((k, v) for k, v in attrs.items() if v != '')
+            attrs = dict((k, v) for k, v in list(attrs.items()) if v != '')
         if values_as_strings:
-            attrs = dict((k, unicode(v)) for k, v in attrs.items())
+            attrs = dict((k, str(v)) for k, v in list(attrs.items()))
         if html_escape:
-            attrs = dict((k, self._html_escape(v)) for k, v in attrs.items())
+            attrs = dict((k, self._html_escape(v)) for k, v in list(attrs.items()))
         return attrs
 
     def _get_custom_attrs(self):
@@ -82,7 +85,7 @@ class Stat(object):
     def __cmp__(self, other):
         return cmp(self._norm_name, other._norm_name)
 
-    def __nonzero__(self):
+    def __bool__(self):
         return not self.failed
 
     def visit(self, visitor):

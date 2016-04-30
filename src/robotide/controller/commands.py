@@ -1,3 +1,8 @@
+from __future__ import print_function
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -714,7 +719,7 @@ class FindVariableOccurrences(FindOccurrences):
             [None, context.datafile_controller]
 
     def _is_builtin_variable(self, name):
-        return name in _VariableStash.global_variables.keys()
+        return name in list(_VariableStash.global_variables.keys())
 
     def _get_source_of_imported_var(self, name, context):
         for df in self._get_all_imported(context):

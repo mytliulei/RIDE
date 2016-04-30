@@ -29,6 +29,7 @@ that can be used programmatically. Other code is for internal usage.
 
 Libdoc itself is implemented in the :mod:`~robot.libdocpkg` package.
 """
+from __future__ import absolute_import
 
 USAGE = """robot.libdoc -- Robot Framework library documentation generator
 
@@ -131,7 +132,7 @@ import os
 # Allows running as a script. __name__ check needed with multiprocessing:
 # http://code.google.com/p/robotframework/issues/detail?id=1137
 if 'robot' not in sys.modules and __name__ == '__main__':
-    import pythonpathsetter
+    from . import pythonpathsetter
 
 from robotide.lib.robot.utils import Application, seq2str
 from robotide.lib.robot.errors import DataError

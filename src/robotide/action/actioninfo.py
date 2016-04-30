@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +19,7 @@
 import wx
 import re
 
-from shortcut import Shortcut
+from .shortcut import Shortcut
 from robotide.widgets import ImageProvider
 
 

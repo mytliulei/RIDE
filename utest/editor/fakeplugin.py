@@ -1,3 +1,4 @@
+from builtins import object
 class FakePlugin(object):
     def __init__(self, editors, item):
         self._editors = editors

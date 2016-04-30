@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +15,7 @@
 
 from robotide.lib.robot import model, utils
 
-from keyword import Keyword
+from .keyword import Keyword
 
 
 class TestCase(model.TestCase):

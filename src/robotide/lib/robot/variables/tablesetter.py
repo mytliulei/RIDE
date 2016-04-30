@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -85,7 +87,7 @@ class VariableTableValueBase(object):
 
     def report_error(self, error):
         if self._error_reporter:
-            self._error_reporter(unicode(error))
+            self._error_reporter(str(error))
 
 
 class ScalarVariableTableValue(VariableTableValueBase):
@@ -145,5 +147,5 @@ class DictVariableTableValue(VariableTableValueBase):
                 key, values = item
                 yield replace_scalar(key), replace_scalar(values)
             else:
-                for key, values in replace_scalar(item).items():
+                for key, values in list(replace_scalar(item).items()):
                     yield key, values

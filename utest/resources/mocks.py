@@ -1,3 +1,4 @@
+from builtins import object
 from robotide.preferences.settings import Settings
 from robotide.preferences.excludes import Excludes
 from robotide.publish import PUBLISHER
@@ -55,7 +56,7 @@ class FakeSettings(Settings):
         self.set('pythonpath', [])
         self.set('auto imports', [])
         if settings:
-            for key, val in settings.items():
+            for key, val in list(settings.items()):
                 self.set(key, val)
 
 

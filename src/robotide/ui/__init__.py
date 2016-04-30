@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #  
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,4 +13,4 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from progress import LoadProgressObserver
+from .progress import LoadProgressObserver

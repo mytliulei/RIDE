@@ -1,3 +1,4 @@
+from builtins import str
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -70,7 +71,7 @@ class XmlLogger(ResultVisitor):
         if kw.type != 'kw':
             attrs['type'] = kw.type
         if kw.timeout:
-            attrs['timeout'] = unicode(kw.timeout)
+            attrs['timeout'] = str(kw.timeout)
         self._writer.start('kw', attrs)
         self._write_list('tags', 'tag', [unic(t) for t in kw.tags])
         self._writer.element('doc', kw.doc)
@@ -84,7 +85,7 @@ class XmlLogger(ResultVisitor):
     def start_test(self, test):
         attrs = {'id': test.id, 'name': test.name}
         if test.timeout:
-            attrs['timeout'] = unicode(test.timeout)
+            attrs['timeout'] = str(test.timeout)
         self._writer.start('test', attrs)
 
     def end_test(self, test):
@@ -106,7 +107,7 @@ class XmlLogger(ResultVisitor):
 
     def _write_metadata(self, metadata):
         self._writer.start('metadata')
-        for name, value in metadata.items():
+        for name, value in list(metadata.items()):
             self._writer.element('item', value, {'name': name})
         self._writer.end('metadata')
 

@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -52,7 +53,7 @@ class _MarkupWriter(object):
         if not attrs:
             return ''
         if not self._write_empty:
-            attrs = dict((k, v) for k, v in attrs.items() if v)
+            attrs = dict((k, v) for k, v in list(attrs.items()) if v)
         return ' '.join('%s="%s"' % (name, attribute_escape(attrs[name] or ''))
                         for name in self._order_attrs(attrs))
 

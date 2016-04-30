@@ -61,6 +61,8 @@ Example
         do_something()
         logger.info('<i>This</i> is a boring example.', html=True)
 """
+from __future__ import division
+from past.utils import old_div
 import logging
 
 from robotide.lib.robot.output import librarylogger
@@ -78,7 +80,7 @@ def write(msg, level, html=False):
         librarylogger.write(msg, level, html)
     else:
         logger = logging.getLogger("RobotFramework")
-        level = {'TRACE': logging.DEBUG/2,
+        level = {'TRACE': old_div(logging.DEBUG,2),
                  'DEBUG': logging.DEBUG,
                  'INFO': logging.INFO,
                  'HTML': logging.INFO,

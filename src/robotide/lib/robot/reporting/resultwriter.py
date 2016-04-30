@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -84,7 +86,7 @@ class ResultWriter(object):
         try:
             writer(path, *args)
         except DataError as err:
-            LOGGER.error(unicode(err))
+            LOGGER.error(str(err))
         except EnvironmentError as err:
             # `err.filename` can be different than `path` at least if reading
             # log/report templates or writing split log fails.

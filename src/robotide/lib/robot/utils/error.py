@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -128,7 +130,7 @@ class PythonErrorDetails(_ErrorDetails):
             return unic(self._exc_type)
         name = self._get_name(self._exc_type)
         try:
-            msg = unicode(self.error)
+            msg = str(self.error)
         except UnicodeError:  # Happens if message is Unicode and version < 2.6
             msg = ' '.join(unic(a) for a in self.error.args)
         return self._format_message(name, msg)

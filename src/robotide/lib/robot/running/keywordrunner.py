@@ -1,3 +1,7 @@
+from builtins import str
+from builtins import zip
+from builtins import range
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -347,7 +351,7 @@ class StatusReporter(object):
         elif isinstance(exc_val, ExecutionFailed):
             self._result.status = exc_val.status
             if self._result.type == self._result.TEARDOWN_TYPE:
-                self._result.message = unicode(exc_val)
+                self._result.message = str(exc_val)
         self._result.endtime = get_timestamp()
         self._context.end_keyword(self._result)
 
@@ -362,6 +366,6 @@ class SyntaxErrorReporter(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if isinstance(exc_val, DataError):
-            msg = unicode(exc_val)
+            msg = str(exc_val)
             self._context.fail(msg)
             raise ExecutionFailed(msg, syntax=True)

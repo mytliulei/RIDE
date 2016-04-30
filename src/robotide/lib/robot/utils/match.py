@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -55,7 +56,7 @@ class Matcher(object):
     def match_any(self, strings):
         return any(self.match(s) for s in strings)
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self._normalize(self.pattern))
 
 

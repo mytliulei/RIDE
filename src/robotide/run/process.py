@@ -1,3 +1,6 @@
+from builtins import str
+from past.builtins import basestring
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,7 +47,7 @@ class Process(object):
         try:
             self._process = subprocess.Popen(self._command, stdout=self._out_fd,
                                              stderr=subprocess.STDOUT)
-        except OSError, err:
+        except OSError as err:
             self._error = str(err)
 
     def is_finished(self):

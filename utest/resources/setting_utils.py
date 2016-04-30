@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import stat
 import unittest
@@ -59,5 +60,5 @@ class TestSettingsHelper(unittest.TestCase):
         try:
             return Settings(self._get_path(path))
         except:
-            print self._read_settings_file_content()
+            print(self._read_settings_file_content())
             raise

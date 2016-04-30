@@ -1,3 +1,8 @@
+from __future__ import print_function
+from builtins import chr
+from builtins import str
+from builtins import range
+from past.builtins import basestring
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +19,7 @@
 
 import wx
 from wx import grid
+from future.utils import with_metaclass
 
 if wx.VERSION >= (3, 0, 3, ''):  # DEBUG wxPhoenix
     from wx.grid import GridCellEditor
@@ -64,8 +70,7 @@ def requires_focus(function):
 from robotide.utils.noconflict import classmaker
 
 
-class KeywordEditor(GridEditor, RideEventHandler):
-    __metaclass__ = classmaker()
+class KeywordEditor(with_metaclass(classmaker(), type('NewBase', (GridEditor, RideEventHandler), {}))):
     _no_cell = (-1, -1)
     _popup_menu_shown = False
     dirty = property(lambda self: self._controller.dirty)
@@ -612,8 +617,8 @@ work.</li>
             return
         try:
             self._execute(AddKeywordFromCells(cells))
-        except ValueError, err:
-            wx.MessageBox(unicode(err))
+        except ValueError as err:
+            wx.MessageBox(str(err))
 
     def _data_cells_from_current_row(self):
         currow, curcol = self.selection.cell
@@ -775,7 +780,7 @@ class ContentAssistCellEditor(GridCellEditor):  # DEBUG wxPhoenix PyGridCellEdi
         if key is wx.WXK_DELETE or key > 255:
             self._grid.HideCellEditControl()
             return
-        self._tc.SetValue(unichr(key))
+        self._tc.SetValue(chr(key))
         self._tc.SetFocus()
         self._tc.SetInsertionPointEnd()
 

@@ -29,6 +29,8 @@ This module is also used by the installed ``pybot``, ``jybot`` and
 This module also provides :func:`run` and :func:`run_cli` functions
 that can be used programmatically. Other code is for internal usage.
 """
+from __future__ import absolute_import
+from builtins import str
 
 USAGE = """Robot Framework -- A generic test automation framework
 
@@ -405,7 +407,7 @@ import sys
 # Allows running as a script. __name__ check needed with multiprocessing:
 # http://code.google.com/p/robotframework/issues/detail?id=1137
 if 'robot' not in sys.modules and __name__ == '__main__':
-    import pythonpathsetter
+    from . import pythonpathsetter
 
 from robotide.lib.robot.conf import RobotSettings
 from robotide.lib.robot.model import ModelModifier
@@ -424,7 +426,7 @@ class RobotFramework(Application):
     def main(self, datasources, **options):
         settings = RobotSettings(options)
         LOGGER.register_console_logger(**settings.console_output_config)
-        LOGGER.info('Settings:\n%s' % unicode(settings))
+        LOGGER.info('Settings:\n%s' % str(settings))
         suite = TestSuiteBuilder(settings['SuiteNames'],
                                  settings['WarnOnSkipped']).build(*datasources)
         suite.configure(**settings.suite_config)
@@ -445,7 +447,7 @@ class RobotFramework(Application):
         return self._filter_options_without_value(options), arguments
 
     def _filter_options_without_value(self, options):
-        return dict((name, value) for name, value in options.items()
+        return dict((name, value) for name, value in list(options.items())
                     if value not in (None, []))
 
 

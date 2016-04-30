@@ -1,3 +1,5 @@
+from builtins import zip
+from builtins import str
 import unittest
 from robotide.spec.iteminfo import LibraryKeywordInfo
 from robotide.spec.librarydatabase import LibraryDatabase
@@ -28,7 +30,7 @@ class TestLibraryDatabase(unittest.TestCase):
         self._database.insert_library_keywords('lib.py', 'foo', [LibraryKeywordInfo('this is old', 'doc', 'lib.py', '')])
         self._database.insert_library_keywords('lib.py', 'foo', [LibraryKeywordInfo('this is new', 'doc', 'lib.py', '')])
         kws = self._database.fetch_library_keywords('lib.py', 'foo')
-        self.assertEqual(len(kws), 1, unicode(kws))
+        self.assertEqual(len(kws), 1, str(kws))
         self.assertEqual(kws[0].name, 'this is new')
 
     def test_removing_old_data(self):

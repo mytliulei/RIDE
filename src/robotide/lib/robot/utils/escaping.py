@@ -1,3 +1,6 @@
+from builtins import chr
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -105,7 +108,7 @@ class Unescaper(object):
         # unichr only supports ordinals up to 0xFFFF with narrow Python builds
         if ordinal > 0xFFFF:
             return eval("u'\\U%08x'" % ordinal)
-        return unichr(ordinal)
+        return chr(ordinal)
 
 
 class EscapeFinder(object):

@@ -1,3 +1,5 @@
+from __future__ import print_function
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -55,7 +57,7 @@ class ConsoleViewer(object):
         self._console(self._libdoc.version or 'N/A')
 
     def _console(self, msg):
-        print encode_output(msg)
+        print(encode_output(msg))
 
     def _show_intro(self, lib):
         self._header(lib.name, underline='=')

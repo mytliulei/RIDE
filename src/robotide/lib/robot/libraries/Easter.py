@@ -1,3 +1,4 @@
+from __future__ import print_function
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,4 +16,4 @@
 def none_shall_pass(who):
     if who is not None:
         raise AssertionError('None shall pass!')
-    print '*HTML* <object width="480" height="385"><param name="movie" value="http://www.youtube.com/v/dhRUe-gz690&hl=en_US&fs=1&rel=0&color1=0x234900&color2=0x4e9e00"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/dhRUe-gz690&hl=en_US&fs=1&rel=0&color1=0x234900&color2=0x4e9e00" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"></embed></object>'
+    print('*HTML* <object width="480" height="385"><param name="movie" value="http://www.youtube.com/v/dhRUe-gz690&hl=en_US&fs=1&rel=0&color1=0x234900&color2=0x4e9e00"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/dhRUe-gz690&hl=en_US&fs=1&rel=0&color1=0x234900&color2=0x4e9e00" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"></embed></object>')

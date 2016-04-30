@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -118,7 +120,7 @@ class ExtendedFinder(object):
             variable = self._find_variable('${%s}' % base_name)
         except DataError as err:
             raise VariableError("Resolving variable '%s' failed: %s"
-                                % (name, unicode(err)))
+                                % (name, str(err)))
         try:
             return eval('_BASE_VAR_' + extended, {'_BASE_VAR_': variable})
         except:

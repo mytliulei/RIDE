@@ -1,3 +1,4 @@
+from builtins import str
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -66,7 +67,7 @@ class NormalizedDict(MutableMapping):
             self._add_initial(initial)
 
     def _add_initial(self, initial):
-        items = initial.items() if hasattr(initial, 'items') else initial
+        items = list(initial.items()) if hasattr(initial, 'items') else initial
         for key, value in items:
             self[key] = value
 
@@ -90,7 +91,7 @@ class NormalizedDict(MutableMapping):
         return len(self._data)
 
     def __str__(self):
-        return str(dict(self.items()))
+        return str(dict(list(self.items())))
 
     def __eq__(self, other):
         if not is_dict_like(other):

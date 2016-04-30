@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +33,7 @@ def DebugFile(path):
         return _DebugFileWriter(outfile)
 
 
-class _DebugFileWriter:
+class _DebugFileWriter(object):
     _separators = {'SUITE': '=', 'TEST': '-', 'KW': '~'}
     _setup_or_teardown = ('setup', 'teardown')
 

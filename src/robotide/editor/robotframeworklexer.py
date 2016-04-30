@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2012-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,7 +64,7 @@ class RobotFrameworkLexer(Lexer):
             for value, token in row_tokenizer.tokenize(row):
                 for value, token in var_tokenizer.tokenize(value, token):
                     if value:
-                        yield index, token, unicode(value)
+                        yield index, token, str(value)
                         index += len(value)
 
 
@@ -421,7 +423,7 @@ class KeywordTable(TestCaseTable):
 
 # Following code copied directly from Robot Framework 2.7.5.
 
-class VariableSplitter:
+class VariableSplitter(object):
 
     def __init__(self, string, identifiers):
         self.identifier = None

@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,7 +38,7 @@ class TagStatistics(object):
         visitor.visit_tag_statistics(self)
 
     def __iter__(self):
-        return iter(sorted(self.tags.values() + self.combined))
+        return iter(sorted(list(self.tags.values()) + self.combined))
 
 
 class TagStatisticsBuilder(object):

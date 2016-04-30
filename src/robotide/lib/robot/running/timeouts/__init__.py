@@ -1,3 +1,6 @@
+from past.builtins import cmp
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,7 +57,7 @@ class _Timeout(object):
         except (DataError, ValueError) as err:
             self.secs = 0.000001 # to make timeout active
             self.error = 'Setting %s timeout failed: %s' \
-                    % (self.type.lower(), unicode(err))
+                    % (self.type.lower(), str(err))
 
     def start(self):
         if self.secs > 0:
@@ -72,7 +75,7 @@ class _Timeout(object):
         return self.active and self.time_left() <= 0
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        return str(self).encode('utf-8')
 
     def __unicode__(self):
         return self.string
@@ -81,7 +84,7 @@ class _Timeout(object):
         return cmp(not self.active, not other.active) \
             or cmp(self.time_left(), other.time_left())
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.string and self.string.upper() != 'NONE')
 
     def run(self, runnable, args=None, kwargs=None):

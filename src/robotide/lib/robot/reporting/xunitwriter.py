@@ -1,3 +1,7 @@
+from __future__ import division
+from builtins import str
+from past.utils import old_div
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -86,7 +90,7 @@ class XUnitFileWriter(ResultVisitor):
                                                'type': 'AssertionError'})
 
     def _time_as_seconds(self, millis):
-        return str(int(round(millis, -3) / 1000))
+        return str(int(old_div(round(millis, -3), 1000)))
 
     def visit_keyword(self, kw):
         pass

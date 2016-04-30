@@ -1,3 +1,5 @@
+from __future__ import print_function
+from past.builtins import basestring
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,177 +41,191 @@ from .tags import TagsDisplay
 
 # Metaclass fix from http://code.activestate.com/recipes/204197-solving-the-metaclass-conflict/
 from robotide.utils.noconflict import classmaker
+from future.utils import with_metaclass
 
 
-class SettingEditor(wx.Panel, utils.RideEventHandler):
-    __metaclass__ = classmaker()
+#futurized class SettingEditor(with_metaclass(classmaker(), type('NewBase', (wx.Panel, utils.RideEventHandler), {}))):
+from sys import version_info
+if version_info[0] < 3:
+    from robotide.utils.noconflict import classmaker
 
-    def __init__(self, parent, controller, plugin, tree):
-        wx.Panel.__init__(self, parent)
-        self._controller = controller
-        self.plugin = plugin
-        self._datafile = controller.datafile
-        self._create_controls()
-        self._tree = tree
-        self._editing = False
-        self.plugin.subscribe(self.update_value, RideImportSetting)
+    class SettingEditor(wx.Panel, utils.RideEventHandler):
+        __metaclass__ = classmaker()
+        pass
+else:
+    class PE(with_metaclass(wx.Panel)):
+        pass
 
-    def _create_controls(self):
-        sizer = wx.BoxSizer(wx.HORIZONTAL)
-        sizer.Add((5, 0))
-        sizer.Add(Label(
-            self, label=self._controller.label,
-            size=(context.SETTING_LABEL_WIDTH, context.SETTING_ROW_HEIGTH)))
-        self._value_display = self._create_value_display()
-        self.update_value()
-        self._tooltip = self._get_tooltip()
-        sizer.Add(self._value_display, 1, wx.EXPAND)
-        self._add_edit(sizer)
-        sizer.Add(ButtonWithHandler(self, 'Clear'))
-        sizer.Layout()
-        self.SetSizer(sizer)
+    class RE(PE, with_metaclass(utils.RideEventHandler)):
+        pass
 
-    def _add_edit(self, sizer):
-        sizer.Add(
-            ButtonWithHandler(self, 'Edit'), flag=wx.LEFT | wx.RIGHT, border=5)
+    class SettingEditor(RE):
+        def __init__(self, parent, controller, plugin, tree):
+            wx.Panel.__init__(self, parent)
+            self._controller = controller
+            self.plugin = plugin
+            self._datafile = controller.datafile
+            self._create_controls()
+            self._tree = tree
+            self._editing = False
+            self.plugin.subscribe(self.update_value, RideImportSetting)
 
-    def _create_value_display(self):
-        display = self._value_display_control()
-        display.Bind(wx.EVT_ENTER_WINDOW, self.OnEnterWindow)
-        display.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeaveWindow)
-        display.Bind(wx.EVT_MOTION, self.OnDisplayMotion)
-        return display
+        def _create_controls(self):
+            sizer = wx.BoxSizer(wx.HORIZONTAL)
+            sizer.Add((5, 0))
+            sizer.Add(Label(
+                self, label=self._controller.label,
+                size=(context.SETTING_LABEL_WIDTH, context.SETTING_ROW_HEIGTH)))
+            self._value_display = self._create_value_display()
+            self.update_value()
+            self._tooltip = self._get_tooltip()
+            sizer.Add(self._value_display, 1, wx.EXPAND)
+            self._add_edit(sizer)
+            sizer.Add(ButtonWithHandler(self, 'Clear'))
+            sizer.Layout()
+            self.SetSizer(sizer)
 
-    def _value_display_control(self):
-        ctrl = SettingValueDisplay(self)
-        ctrl.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
-        ctrl.Bind(wx.EVT_KEY_DOWN, self.OnKey)
-        return ctrl
+        def _add_edit(self, sizer):
+            sizer.Add(
+                ButtonWithHandler(self, 'Edit'), flag=wx.LEFT | wx.RIGHT, border=5)
 
-    def _get_tooltip(self):
-        return HtmlPopupWindow(self, (500, 350))
+        def _create_value_display(self):
+            display = self._value_display_control()
+            display.Bind(wx.EVT_ENTER_WINDOW, self.OnEnterWindow)
+            display.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeaveWindow)
+            display.Bind(wx.EVT_MOTION, self.OnDisplayMotion)
+            return display
 
-    def OnKey(self, event):
-        self._tooltip.hide()
-        event.Skip()
+        def _value_display_control(self):
+            ctrl = SettingValueDisplay(self)
+            ctrl.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
+            ctrl.Bind(wx.EVT_KEY_DOWN, self.OnKey)
+            return ctrl
 
-    def OnDisplayMotion(self, event):
-        self._tooltip.hide()
+        def _get_tooltip(self):
+            return HtmlPopupWindow(self, (500, 350))
 
-    def refresh(self, controller):
-        self._controller = controller
-        self.update_value()
-
-    def refresh_datafile(self, item, event):
-        self._tree.refresh_datafile(item, event)
-
-    def OnEdit(self, event=None):
-        self._hide_tooltip()
-        self._editing = True
-        dlg = self._crete_editor_dialog()
-        if dlg.ShowModal() == wx.ID_OK:
-            self._set_value(dlg.get_value(), dlg.get_comment())
-            self._update_and_notify()
-        dlg.Destroy()
-        self._editing = False
-
-    def _crete_editor_dialog(self):
-        dlg_class = EditorDialog(self._controller)
-        return dlg_class(self._datafile, self._controller, self.plugin)
-
-    def _set_value(self, value_list, comment):
-        self._controller.execute(SetValues(value_list, comment))
-
-    def _hide_tooltip(self):
-        self._stop_popup_timer()
-        self._tooltip.hide()
-
-    def _stop_popup_timer(self):
-        if hasattr(self, 'popup_timer'):
-            self.popup_timer.Stop()
-
-    def OnEnterWindow(self, event):
-        if self._mainframe_has_focus():
-            self.popup_timer = wx.CallLater(500, self.OnPopupTimer)
-
-    def _mainframe_has_focus(self):
-        return wx.GetTopLevelParent(self.FindFocus()) == \
-            wx.GetTopLevelParent(self)
-
-    def OnLeaveWindow(self, event):
-        self._stop_popup_timer()
-
-    def OnPopupTimer(self, event):
-        # TODO This prevents tool tip for ex. Template edit field in wxPhoenix
-        try:  # DEBUG wxPhoenix
-            _tooltipallowed= self.Parent.tooltip_allowed(self._tooltip)
-        except AttributeError:
-             print("DEBUG: There was an attempt to show a Tool Tip.\n")
-             return
-        if _tooltipallowed:
-            details, title = self._get_details_for_tooltip()
-            if details:
-                self._tooltip.set_content(details, title)
-                self._tooltip.show_at(self._tooltip_position())
-
-    def _get_details_for_tooltip(self):
-        kw = self._controller.keyword_name
-        return self.plugin.get_keyword_details(kw), kw
-
-    def _tooltip_position(self):
-        ms = wx.GetMouseState()
-        # ensure that the popup gets focus immediately
-        return ms.x-3, ms.y-3
-
-    def OnLeftUp(self, event):
-        if event.ControlDown() or event.CmdDown():
-            self._navigate_to_user_keyword()
-        else:
-            if self._has_selected_area() and not self._editing:
-                wx.CallAfter(self.OnEdit, event)
+        def OnKey(self, event):
+            self._tooltip.hide()
             event.Skip()
 
-    def _has_selected_area(self):
-        selection = self._value_display.GetSelection()
-        if selection is None:
-            return False
-        return selection[0] == selection[1]
+        def OnDisplayMotion(self, event):
+            self._tooltip.hide()
 
-    def _navigate_to_user_keyword(self):
-        uk = self.plugin.get_user_keyword(self._controller.keyword_name)
-        if uk:
-            self._tree.select_user_keyword_node(uk)
+        def refresh(self, controller):
+            self._controller = controller
+            self.update_value()
 
-    def _update_and_notify(self):
-        self.update_value()
+        def refresh_datafile(self, item, event):
+            self._tree.refresh_datafile(item, event)
 
-    def OnClear(self, event):
-        self._controller.execute(ClearSetting())
-        self._update_and_notify()
+        def OnEdit(self, event=None):
+            self._hide_tooltip()
+            self._editing = True
+            dlg = self._crete_editor_dialog()
+            if dlg.ShowModal() == wx.ID_OK:
+                self._set_value(dlg.get_value(), dlg.get_comment())
+                self._update_and_notify()
+            dlg.Destroy()
+            self._editing = False
 
-    def update_value(self, event=None):
-        if self._controller is None:
-            return
-        if self._controller.is_set:
-            self._value_display.set_value(self._controller, self.plugin)
-        else:
-            self._value_display.clear()
+        def _crete_editor_dialog(self):
+            dlg_class = EditorDialog(self._controller)
+            return dlg_class(self._datafile, self._controller, self.plugin)
 
-    def get_selected_datafile_controller(self):
-        return self._controller.datafile_controller
+        def _set_value(self, value_list, comment):
+            self._controller.execute(SetValues(value_list, comment))
 
-    def close(self):
-        self._controller = None
-        self.plugin.unsubscribe(self.update_value, RideImportSetting)
+        def _hide_tooltip(self):
+            self._stop_popup_timer()
+            self._tooltip.hide()
 
-    def highlight(self, text):
-        return self._value_display.highlight(text)
+        def _stop_popup_timer(self):
+            if hasattr(self, 'popup_timer'):
+                self.popup_timer.Stop()
 
-    def clear_highlight(self):
-        return self._value_display.clear_highlight()
+        def OnEnterWindow(self, event):
+            if self._mainframe_has_focus():
+                self.popup_timer = wx.CallLater(500, self.OnPopupTimer)
 
-    def contains(self, text):
-        return self._value_display.contains(text)
+        def _mainframe_has_focus(self):
+            return wx.GetTopLevelParent(self.FindFocus()) == \
+                wx.GetTopLevelParent(self)
+
+        def OnLeaveWindow(self, event):
+            self._stop_popup_timer()
+
+        def OnPopupTimer(self, event):
+            # TODO This prevents tool tip for ex. Template edit field in wxPhoenix
+            try:  # DEBUG wxPhoenix
+                _tooltipallowed= self.Parent.tooltip_allowed(self._tooltip)
+            except AttributeError:
+                 print("DEBUG: There was an attempt to show a Tool Tip.\n")
+                 return
+            if _tooltipallowed:
+                details, title = self._get_details_for_tooltip()
+                if details:
+                    self._tooltip.set_content(details, title)
+                    self._tooltip.show_at(self._tooltip_position())
+
+        def _get_details_for_tooltip(self):
+            kw = self._controller.keyword_name
+            return self.plugin.get_keyword_details(kw), kw
+
+        def _tooltip_position(self):
+            ms = wx.GetMouseState()
+            # ensure that the popup gets focus immediately
+            return ms.x-3, ms.y-3
+
+        def OnLeftUp(self, event):
+            if event.ControlDown() or event.CmdDown():
+                self._navigate_to_user_keyword()
+            else:
+                if self._has_selected_area() and not self._editing:
+                    wx.CallAfter(self.OnEdit, event)
+                event.Skip()
+
+        def _has_selected_area(self):
+            selection = self._value_display.GetSelection()
+            if selection is None:
+                return False
+            return selection[0] == selection[1]
+
+        def _navigate_to_user_keyword(self):
+            uk = self.plugin.get_user_keyword(self._controller.keyword_name)
+            if uk:
+                self._tree.select_user_keyword_node(uk)
+
+        def _update_and_notify(self):
+            self.update_value()
+
+        def OnClear(self, event):
+            self._controller.execute(ClearSetting())
+            self._update_and_notify()
+
+        def update_value(self, event=None):
+            if self._controller is None:
+                return
+            if self._controller.is_set:
+                self._value_display.set_value(self._controller, self.plugin)
+            else:
+                self._value_display.clear()
+
+        def get_selected_datafile_controller(self):
+            return self._controller.datafile_controller
+
+        def close(self):
+            self._controller = None
+            self.plugin.unsubscribe(self.update_value, RideImportSetting)
+
+        def highlight(self, text):
+            return self._value_display.highlight(text)
+
+        def clear_highlight(self):
+            return self._value_display.clear_highlight()
+
+        def contains(self, text):
+            return self._value_display.contains(text)
 
 
 class SettingValueDisplay(wx.TextCtrl):

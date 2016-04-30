@@ -1,3 +1,4 @@
+from builtins import range
 import unittest
 from nose.tools import assert_equals
 

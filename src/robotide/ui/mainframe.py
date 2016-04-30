@@ -1,3 +1,6 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,6 +36,7 @@ from robotide.action.shortcut import localize_shortcuts
 from .tree import Tree
 from .notebook import NoteBook
 from .progress import LoadProgressObserver
+from future.utils import with_metaclass
 
 
 _menudata = """
@@ -68,9 +72,7 @@ ART_FOLDER_OPEN
 from robotide.utils.noconflict import classmaker
 
 
-class RideFrame(wx.Frame, RideEventHandler):
-    __metaclass__ = classmaker()
-
+class RideFrame(with_metaclass(classmaker(), type('NewBase', (wx.Frame, RideEventHandler), {}))):
     def __init__(self, application, controller):
         wx.Frame.__init__(self, parent=None, title='RIDE',
                           pos=application.settings['mainframe position'],
@@ -384,7 +386,7 @@ class ActionRegisterer(object):
         separator_action = ActionFactory(SeparatorInfo("Tools"))
         add_separator_after = ["stop test run", "search unused keywords",
                                "preview", "view ride log"]
-        for key in sorted(self._tools_items.iterkeys()):
+        for key in sorted(self._tools_items.keys()):
             self._menubar.register(self._tools_items[key])
             if self._tools_items[key].name.lower() in add_separator_after:
                 self._menubar.register(separator_action)

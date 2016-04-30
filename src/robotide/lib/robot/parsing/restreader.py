@@ -1,3 +1,6 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +15,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from cStringIO import StringIO
+from io import StringIO
 
 from .htmlreader import HtmlReader
 from .txtreader import TxtReader

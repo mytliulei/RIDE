@@ -1,3 +1,6 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +24,7 @@ from robotide.widgets import Dialog, HtmlWindow
 from .widgets import PreferencesPanel
 
 
-class Excludes():
+class Excludes(object):
 
     def __init__(self, directory):
         self._settings_directory = directory

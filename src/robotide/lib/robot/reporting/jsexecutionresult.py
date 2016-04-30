@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,7 +36,7 @@ class JsExecutionResult(object):
             'stats': statistics,
             'errors': errors,
             'baseMillis': basemillis,
-            'generatedMillis': long(time.mktime(gentime) * 1000) - basemillis,
+            'generatedMillis': int(time.mktime(gentime) * 1000) - basemillis,
             'generatedTimestamp': utils.format_time(gentime, gmtsep=' ')
         }
 

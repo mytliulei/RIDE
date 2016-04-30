@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+from builtins import str
+from past.builtins import basestring
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,7 +41,7 @@ class Publisher(object):
         self._listeners.setdefault(key, []).append(wrapper)
 
     def _sendMessage(self, topic, data):
-        current_wrappers = self._listeners.values()
+        current_wrappers = list(self._listeners.values())
         for wrappers in current_wrappers:
             for wrapper in wrappers:
                 if wrapper.listens(topic):
@@ -85,15 +89,15 @@ class _ListenerWrapper(object):
         # WxPublisher.unsubscribe(self, self.topic)
 
     def __call__(self, data):
-        from messages import RideLogException
+        from .messages import RideLogException
         try:
             self.listener(data)
-        except Exception, err:
+        except Exception as err:
             # Prevent infinite recursion if RideLogMessage listener is broken,
             if not isinstance(data, RideLogException):
                 RideLogException(message='Error in listener: %s\n' \
-                                         'While handling %s' % (unicode(err),
-                                                                unicode(data)),
+                                         'While handling %s' % (str(err),
+                                                                str(data)),
                                  exception=err, level='ERROR').publish()
 
 

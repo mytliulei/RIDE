@@ -1,3 +1,4 @@
+from builtins import object
 import unittest
 import wx
 from editor.fakeplugin import FakePlugin

@@ -1,3 +1,6 @@
+from __future__ import division
+from builtins import zip
+from past.utils import old_div
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,7 +45,7 @@ def _prune_excess_lines(lines, lengths, from_end=False):
         lengths.reverse()
     ret = []
     total = 0
-    limit = _MAX_ERROR_LINES/2
+    limit = old_div(_MAX_ERROR_LINES,2)
     for line, length in zip(lines[:limit], lengths[:limit]):
         if total + length >= limit:
             ret.append(_cut_long_line(line, total, from_end))
@@ -54,7 +57,7 @@ def _prune_excess_lines(lines, lengths, from_end=False):
     return ret
 
 def _cut_long_line(line, used, from_end):
-    available_lines = _MAX_ERROR_LINES/2 - used
+    available_lines = old_div(_MAX_ERROR_LINES,2) - used
     available_chars = available_lines * _MAX_ERROR_LINE_LENGTH - 3
     if len(line) > available_chars:
         if not from_end:
@@ -84,7 +87,7 @@ def _dict_to_str(d):
     if not d:
         return '{ }'
     return '{ %s }' % ' | '.join('%s=%s' % (unic(k), unic(v))
-                                 for k, v in d.items())
+                                 for k, v in list(d.items()))
 
 
 def get_console_length(text):

@@ -42,11 +42,18 @@ linux it's /tmp).
 You can safely manually remove these directories, except for the one
 being used for a currently running test.
 '''
+from __future__ import division
+from future import standard_library
+from functools import reduce
+standard_library.install_aliases()
+from builtins import chr
+from builtins import str
+from past.utils import old_div
 import datetime
 import time
 import os
 import re
-from Queue import Queue
+from queue import Queue
 import wx
 import wx.stc
 from wx.lib.embeddedimage import PyEmbeddedImage
@@ -262,10 +269,10 @@ class TestRunnerPlugin(Plugin):
             self._process_timer.Start(41) # roughly 24fps
             self._set_running()
             self._progress_bar.Start()
-        except Exception, e:
+        except Exception as e:
             self._set_stopped()
             error, log_message = self.get_current_profile().format_error(
-                unicode(e), None)
+                str(e), None)
             self._output(error)
             if log_message:
                 log_message.publish()
@@ -444,7 +451,7 @@ class TestRunnerPlugin(Plugin):
         textctrl.SetReadOnly(False)
         try:
             textctrl.AppendText(string)
-        except UnicodeDecodeError,e:
+        except UnicodeDecodeError as e:
             # I'm not sure why I sometimes get this, and I don't know what I
             # can do other than to ignore it.
             pass
@@ -469,7 +476,7 @@ class TestRunnerPlugin(Plugin):
         else:
             out_width, _ = self.out.GetSizeTuple()
         char_width = self.out.GetCharWidth()
-        return str(int(out_width/char_width)-10)
+        return str(int(old_div(out_width,char_width))-10)
 
     def _build_ui(self):
         """Creates the UI for this plugin"""

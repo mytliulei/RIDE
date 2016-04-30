@@ -1,3 +1,6 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +16,7 @@
 #  limitations under the License.
 
 import ctypes
-import thread
+import _thread
 import time
 from threading import Timer
 
@@ -23,7 +26,7 @@ from robotide.lib.robot.errors import TimeoutError
 class Timeout(object):
 
     def __init__(self, timeout, timeout_error):
-        self._runner_thread_id = thread.get_ident()
+        self._runner_thread_id = _thread.get_ident()
         self._timeout_error = self._create_timeout_error_class(timeout_error)
         self._timer = Timer(timeout, self._raise_timeout_error)
         self._timeout_occurred = False

@@ -1,3 +1,4 @@
+from builtins import range
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +20,7 @@ from robotide.controller.commands import MoveUp, MoveDown, DeleteItem
 from robotide.utils import RideEventHandler
 from robotide.widgets import PopupMenu, PopupMenuItems, ButtonWithHandler, Font
 from robotide.context import ctrl_or_cmd, bind_keys_to_evt_menu, IS_WINDOWS
+from future.utils import with_metaclass
 
 
 class ListEditorBase(wx.Panel):
@@ -140,11 +142,27 @@ class ListEditorBase(wx.Panel):
         return False
 
 
+
 # Metaclass fix from http://code.activestate.com/recipes/204197-solving-the-metaclass-conflict/
-from robotide.utils.noconflict import classmaker
-class ListEditor(ListEditorBase, RideEventHandler):
-    __metaclass__ = classmaker()
-    pass
+#from robotide.utils.noconflict import classmaker
+#futurized class ListEditor(with_metaclass(classmaker(), type('NewBase', (ListEditorBase, RideEventHandler), {}))):
+from sys import version_info
+if version_info[0] < 3:
+    from robotide.utils.noconflict import classmaker
+    class ListEditor(ListEditorBase, RideEventHandler):
+        __metaclass__ = classmaker()
+        pass
+else:
+    class LE(ListEditorBase):
+        pass
+
+
+    class RE(with_metaclass(RideEventHandler, LE)):
+        pass
+
+    class ListEditor(RE):
+        pass
+
 
 class AutoWidthColumnList(wx.ListCtrl, ListCtrlAutoWidthMixin):
 

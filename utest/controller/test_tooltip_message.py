@@ -1,3 +1,4 @@
+from builtins import str
 import unittest
 from nose.tools import assert_false, assert_equals, assert_true
 

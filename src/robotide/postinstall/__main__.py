@@ -1,3 +1,4 @@
+from builtins import next
 #!/usr/bin/env python
 # encoding=utf-8
 #  TODO: Copyright 2016 Robot Framework Organization
@@ -136,7 +137,7 @@ ride.py\nComment=A Robot Framework IDE\nGenericName=RIDE\n")
 e=Application\nX-KDE-SubstituteUID=false\n")
             uid = pwd.getpwnam(user).pw_uid
             os.chown(link, uid, -1)  # groupid == -1 means keep unchanged
-            os.chmod(link, 0744)
+            os.chmod(link, 0o744)
 
 
 def _create_desktop_shortcut_mac(frame=None):
@@ -155,7 +156,7 @@ png".format(sys.version[:3])  # TODO: Find a way to change shortcut icon
             shortcut.write("#!/bin/sh\n/usr/local/bin/ride.py $* &\n")
         uid = pwd.getpwnam(user).pw_uid
         os.chown(link, uid, -1)  # groupid == -1 means keep unchanged
-        os.chmod(link, 0744)
+        os.chmod(link, 0o744)
 
 
 def _create_desktop_shortcut_windows(frame=None):

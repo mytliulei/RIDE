@@ -1,3 +1,4 @@
+from builtins import range
 import unittest
 from searchtests.test_matcher import _TestSearchTest
 

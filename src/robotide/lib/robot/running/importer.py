@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -87,7 +88,7 @@ class Importer(object):
         return libcopy
 
 
-class ImportCache:
+class ImportCache(object):
     """Keeps track on and optionally caches imported items.
 
     Handles paths in keys case-insensitively on case-insensitive OSes.

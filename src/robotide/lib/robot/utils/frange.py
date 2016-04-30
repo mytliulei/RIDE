@@ -1,3 +1,6 @@
+from __future__ import division
+from builtins import range
+from past.utils import old_div
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,11 +21,11 @@ from .robottypes import is_integer, is_string
 def frange(*args):
     """Like ``range()`` but accepts float arguments."""
     if all(is_integer(arg) for arg in args):
-        return range(*args)
+        return list(range(*args))
     start, stop, step = _get_start_stop_step(args)
     digits = max(_digits(start), _digits(stop), _digits(step))
     factor = pow(10, digits)
-    return [x/float(factor) for x in range(int(round(start*factor)),
+    return [old_div(x,float(factor)) for x in range(int(round(start*factor)),
                                            int(round(stop*factor)),
                                            int(round(step*factor)))]
 

@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +18,8 @@ from operator import itemgetter
 from robotide.lib.robot.utils import compress_text
 
 
-class StringIndex(long):
+# long to int
+class StringIndex(int):
     pass
 
 
@@ -50,5 +52,5 @@ class StringCache(object):
         return '*'+text
 
     def dump(self):
-        return tuple(item[0] for item in sorted(self._cache.iteritems(),
+        return tuple(item[0] for item in sorted(iter(self._cache.items()),
                                                 key=itemgetter(1)))

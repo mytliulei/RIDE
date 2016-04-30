@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +17,7 @@ from robotide.lib.robot.errors import DataError
 from robotide.lib.robot.model import Tags
 
 
-class UserErrorHandler:
+class UserErrorHandler(object):
     """Created if creating handlers fail -- running raises DataError.
 
     The idea is not to raise DataError at processing time and prevent all

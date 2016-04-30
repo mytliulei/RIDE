@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import range
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -156,10 +158,10 @@ class ViewAllTagsDialog(wx.Frame, listmix.ColumnSorterMixin):
         for test in self.frame._controller.all_testcases():
             self._test_cases.append(test)
             for tag in test.tags:
-                if tag.is_empty() or len(unicode(tag).strip()) == 0:
+                if tag.is_empty() or len(str(tag).strip()) == 0:
                     continue
                 else:
-                    tag_name = unicode(tag)
+                    tag_name = str(tag)
                 if tag_name in unique_tags:
                     unique_tags[tag_name].append(test)
                     self._tagit[tag_name].append(tag)
@@ -169,7 +171,7 @@ class ViewAllTagsDialog(wx.Frame, listmix.ColumnSorterMixin):
 
         isreversed = (self.sort_state[1] != 1)
         self.total_test_cases = len(self._test_cases)
-        self._results = sorted(unique_tags.items(),
+        self._results = sorted(list(unique_tags.items()),
                                key=lambda item: item[0].lower,
                                reverse=isreversed)
 
@@ -331,10 +333,10 @@ class TagsListCtrl(wx.ListCtrl, listmix.CheckListCtrlMixin,
         position = self.GetItemCount()
         self._clientData[model_index] = tag_to_tests
         if wx.VERSION >= (3, 0, 3, ''):  # DEBUG wxPhoenix
-            self.InsertItem(position, unicode(tag_to_tests[1]))
+            self.InsertItem(position, str(tag_to_tests[1]))
             self.SetItem(position, 1, str(len(tag_to_tests[0])))
         else:
-            self.InsertStringItem(position, unicode(tag_to_tests[1]))
+            self.InsertStringItem(position, str(tag_to_tests[1]))
             self.SetStringItem(position, 1, str(len(tag_to_tests[0])))
         # associate the model with the GUI
         self.SetItemData(position, model_index)

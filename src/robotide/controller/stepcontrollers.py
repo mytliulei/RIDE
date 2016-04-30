@@ -1,3 +1,5 @@
+from builtins import range
+from past.builtins import basestring
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -183,7 +185,7 @@ class StepController(_BaseController):
 
     def _get_last_none_empty_col_idx(self):
         values = self.as_list()
-        for i in reversed(range(len(values))):
+        for i in reversed(list(range(len(values)))):
             if values[i].strip() != '':
                 return i
         return None

@@ -1,3 +1,4 @@
+from builtins import str
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,4 +25,4 @@ class Metadata(NormalizedDict):
         return u'{%s}' % ', '.join('%s: %s' % (k, self[k]) for k in self)
 
     def __str__(self):
-        return unicode(self).encode('ASCII', 'replace')
+        return str(self).encode('ASCII', 'replace')

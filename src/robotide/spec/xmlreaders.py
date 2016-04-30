@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +19,7 @@ import sys
 
 from robotide import robotapi, utils
 from robotide.utils.versioncomparator import cmp_versions
-from iteminfo import _XMLKeywordContent
+from .iteminfo import _XMLKeywordContent
 from robotide import context
 
 class SpecInitializer(object):

@@ -98,6 +98,7 @@ Example output::
 
     FAILED (failures=2)
 """
+from builtins import str
 
 from .robottypes import type_name
 from .unic import unic

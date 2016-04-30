@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -86,14 +88,14 @@ class Setting(object):
             ret.extend(self.value)
         return ret
 
-    def __nonzero__(self):
+    def __bool__(self):
         return self.is_set()
 
     def __iter__(self):
         return iter(self.value or ())
 
     def __unicode__(self):
-        return unicode(self.value or '')
+        return str(self.value or '')
 
 
 class StringValueJoiner(object):

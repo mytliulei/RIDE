@@ -1,3 +1,5 @@
+from builtins import range
+from builtins import object
 import unittest
 from nose.tools import assert_equals
 

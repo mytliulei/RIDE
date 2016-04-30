@@ -1,3 +1,4 @@
+from builtins import object
 import unittest
 
 from robotide.action.actioninfo import ActionInfoCollection

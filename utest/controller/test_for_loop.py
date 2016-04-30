@@ -1,3 +1,4 @@
+from builtins import zip
 import unittest
 import datafilereader
 from robotide.controller.cellinfo import CellType

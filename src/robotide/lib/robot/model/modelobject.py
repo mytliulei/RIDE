@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,17 +15,17 @@
 #  limitations under the License.
 
 from robotide.lib.robot.utils.setter import SetterAwareType
+from future.utils import with_metaclass
 
 
-class ModelObject(object):
+class ModelObject(with_metaclass(SetterAwareType, object)):
     __slots__ = []
-    __metaclass__ = SetterAwareType
 
     def __unicode__(self):
         return self.name
 
     def __str__(self):
-        return unicode(self).encode('ASCII', 'replace')
+        return str(self).encode('ASCII', 'replace')
 
     def __repr__(self):
         return repr(str(self))

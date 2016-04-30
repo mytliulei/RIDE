@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -99,7 +101,7 @@ class _ExecutionContext(object):
     @contextmanager
     def keyword_teardown(self, error):
         self.variables.set_keyword('${KEYWORD_STATUS}', 'FAIL' if error else 'PASS')
-        self.variables.set_keyword('${KEYWORD_MESSAGE}', unicode(error or ''))
+        self.variables.set_keyword('${KEYWORD_MESSAGE}', str(error or ''))
         self.in_keyword_teardown += 1
         try:
             yield

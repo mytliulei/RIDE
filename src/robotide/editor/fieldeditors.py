@@ -1,3 +1,7 @@
+from __future__ import division
+from builtins import str
+from builtins import range
+from past.utils import old_div
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -187,7 +191,7 @@ class _EditorGrid(GridEditor):
     _col_add_threshold = 0
 
     def __init__(self, parent, value, num_cols):
-        num_rows = len(value) / num_cols + 2
+        num_rows = old_div(len(value), num_cols) + 2
         GridEditor.__init__(self, parent, num_rows, num_cols)
         self._set_default_sizes()
         self._bind_actions()
@@ -282,7 +286,7 @@ class _EditorGrid(GridEditor):
         self.SelectAll()
 
     def resize_columns(self, width):
-        self.SetDefaultColSize(max(width / self.NumberCols, 100), True)
+        self.SetDefaultColSize(max(old_div(width, self.NumberCols), 100), True)
 
     def set_number_of_columns(self, columns):
         new_cols = columns - self.NumberCols

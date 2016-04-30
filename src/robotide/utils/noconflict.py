@@ -1,6 +1,9 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import map
 # Metaclass fix from http://code.activestate.com/recipes/204197-solving-the-metaclass-conflict/
 
-import inspect, types, __builtin__
+import inspect, types, builtins
 
 ############## preliminary: two utility functions #####################
 
@@ -14,7 +17,7 @@ def skip_redundant(iterable, skipset=None):
 
 
 def remove_redundant(metaclasses):
-    skipset = set([types.ClassType])
+    skipset = set([type])
     for meta in metaclasses: # determines the metaclasses to be skipped
         skipset.update(inspect.getmro(meta)[1:])
     return tuple(skip_redundant(metaclasses, skipset))

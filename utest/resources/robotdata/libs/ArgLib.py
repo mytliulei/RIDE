@@ -1,3 +1,4 @@
+from builtins import object
 class ArgLib(object):
 
     def __init__(self, mandatory_arg, default_arg=None):

@@ -1,3 +1,4 @@
+from builtins import object
 import unittest
 from robotide.utils.variablematcher import *
 from nose.tools import assert_equals, assert_true, assert_false

@@ -1,3 +1,7 @@
+from __future__ import division
+from builtins import range
+from builtins import object
+from past.utils import old_div
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +43,7 @@ class StdoutLogSplitter(object):
     def _split_output(self, output):
         tokens = self._split_from_levels.split(output)
         tokens = self._add_initial_level_and_time_if_needed(tokens)
-        for i in xrange(0, len(tokens), 3):
+        for i in range(0, len(tokens), 3):
             yield tokens[i:i+3]
 
     def _add_initial_level_and_time_if_needed(self, tokens):
@@ -51,7 +55,7 @@ class StdoutLogSplitter(object):
         return tokens[0] == ''
 
     def _format_timestamp(self, millis):
-        return format_time(float(millis)/1000, millissep='.')
+        return format_time(old_div(float(millis),1000), millissep='.')
 
     def __iter__(self):
         return iter(self._messages)

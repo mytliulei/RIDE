@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +14,7 @@
 #  limitations under the License.
 
 
-class _AbstractWinformsDialog:
+class _AbstractWinformsDialog(object):
 
     def __init__(self):
         raise RuntimeError('This keyword is not yet implemented with IronPython')

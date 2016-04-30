@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,4 +34,4 @@ class ArgumentSpec(object):
 
     @property
     def maxargs(self):
-        return len(self.positional) if not self.varargs else sys.maxint
+        return len(self.positional) if not self.varargs else sys.maxsize

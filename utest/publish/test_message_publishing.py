@@ -1,3 +1,5 @@
+from __future__ import division
+from past.utils import old_div
 import unittest
 
 from nose.tools import assert_equals, assert_raises, assert_true
@@ -52,8 +54,8 @@ class TestRideLogMessage(unittest.TestCase):
 
     def test_log_exception(self):
         try:
-            1 / 0
-        except Exception, err:
+            old_div(1, 0)
+        except Exception as err:
             msg = RideLogException(
                 message='Some error text', exception=err, level='ERROR')
             assert_true(msg.message.startswith(

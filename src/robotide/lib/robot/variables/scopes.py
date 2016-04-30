@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -251,5 +252,5 @@ class SetVariables(object):
         self._scopes[-1][name] = value
 
     def update(self, variables):
-        for name, value in self._scopes[-1].items():
+        for name, value in list(self._scopes[-1].items()):
             variables[name] = value

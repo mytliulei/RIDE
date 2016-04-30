@@ -1,3 +1,4 @@
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -76,7 +77,7 @@ class _BaseSettings(object):
         self._process_cli_opts(dict(options or {}, **extra_options))
 
     def _process_cli_opts(self, opts):
-        for name, (cli_name, default) in self._cli_opts.items():
+        for name, (cli_name, default) in list(self._cli_opts.items()):
             value = opts[cli_name] if cli_name in opts else default
             if default == [] and not is_list_like(value):
                 value = [value]
@@ -169,7 +170,7 @@ class _BaseSettings(object):
         if ':' in value:
             value, seed = value.split(':', 1)
         else:
-            seed = random.randint(0, sys.maxint)
+            seed = random.randint(0, sys.maxsize)
         if value in ('test', 'suite'):
             value += 's'
         if value not in ('tests', 'suites', 'none', 'all'):

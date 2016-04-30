@@ -1,3 +1,6 @@
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +22,7 @@ import threading
 
 def _print_stacks():
     id2name = dict((th.ident, th.name) for th in threading.enumerate())
-    for threadId, stack in sys._current_frames().items():
+    for threadId, stack in list(sys._current_frames().items()):
         print(id2name[threadId])
         traceback.print_stack(f=stack)
 

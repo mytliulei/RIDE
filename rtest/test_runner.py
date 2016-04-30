@@ -1,5 +1,8 @@
+from __future__ import absolute_import
+from builtins import range
+from builtins import object
 import inspect
-from model import RIDE
+from .model import RIDE
 import random
 import shutil
 import os

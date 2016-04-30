@@ -1,3 +1,5 @@
+from builtins import range
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -507,7 +509,7 @@ class String(object):
                             ('[NUMBERS]', digits)]:
             chars = chars.replace(name, value)
         maxi = len(chars) - 1
-        return ''.join(chars[randint(0, maxi)] for _ in xrange(length))
+        return ''.join(chars[randint(0, maxi)] for _ in range(length))
 
     def get_substring(self, string, start, end=None):
         """Returns a substring from ``start`` index to ``end`` index.

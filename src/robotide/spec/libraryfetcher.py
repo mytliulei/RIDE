@@ -1,3 +1,4 @@
+from builtins import str
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,7 +36,7 @@ def _parse_args(args):
     if args.defaults:
         for i, value in enumerate(args.defaults):
             index = len(args.positional) - len(args.defaults) + i
-            parsed[index] = parsed[index] + '=' + unicode(value)
+            parsed[index] = parsed[index] + '=' + str(value)
     if args.varargs:
         parsed.append('*%s' % args.varargs)
     if args.kwargs:

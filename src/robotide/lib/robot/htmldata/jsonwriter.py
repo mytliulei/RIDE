@@ -1,3 +1,6 @@
+from builtins import str
+from past.builtins import basestring
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -87,7 +90,7 @@ class StringDumper(_Dumper):
 
 
 class IntegerDumper(_Dumper):
-    _handled_types = (int, long, bool)
+    _handled_types = (int, int, bool)
 
     def dump(self, data, mapping):
         self._write(str(data).lower())

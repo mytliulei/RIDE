@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -60,7 +62,7 @@ def TipMessage(cell):
         return ''
     tip = _TooltipMessage(cell) if not cell.for_loop \
         else _ForLoopTooltipMessage(cell)
-    return html_escape(unicode(tip))
+    return html_escape(str(tip))
 
 
 class _TooltipMessage(object):
@@ -119,7 +121,7 @@ class _TooltipMessage(object):
     def _unknown(self, cell):
         return ''
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.message)
 
     def __str__(self):
@@ -151,7 +153,7 @@ class CellPosition(object):
         self.argument_name = argument_name
 
 
-class ContentType:
+class ContentType(object):
     USER_KEYWORD = 'USER_KEYWORD'
     LIBRARY_KEYWORD = 'LIBRARY_KEYWORD'
     KEYWORDS = (USER_KEYWORD, LIBRARY_KEYWORD)
@@ -162,7 +164,7 @@ class ContentType:
     EMPTY = 'EMPTY'
 
 
-class CellType:
+class CellType(object):
     ASSIGN = 'ASSIGN'
     KEYWORD = 'KEYWORD'
     MANDATORY = 'MANDATORY'

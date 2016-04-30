@@ -126,8 +126,9 @@ settings may look something like this::
     recent_files = []
     _enabled = False
 """
+from __future__ import absolute_import
 
 from robotide.action import ActionInfoCollection, ActionInfo, SeparatorInfo
 from robotide.publish.messages import *
-from plugin import Plugin
-from tree_aware_plugin_mixin import TreeAwarePluginMixin
+from .plugin import Plugin
+from .tree_aware_plugin_mixin import TreeAwarePluginMixin

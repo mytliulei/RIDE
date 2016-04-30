@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -150,7 +152,7 @@ class _Importer(object):
                     return self._import(name, fromlist, retry=False)
                 # Cannot use plain raise due to
                 # http://ironpython.codeplex.com/workitem/32332
-                raise sys.exc_type, sys.exc_value, sys.exc_traceback
+                raise(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
         except:
             raise DataError(*get_error_details())
 

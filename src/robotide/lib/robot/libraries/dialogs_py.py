@@ -1,3 +1,7 @@
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from past.utils import old_div
 #  Copyright 2008-2015 Nokia Solutions and Networks
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +18,7 @@
 
 import sys
 from threading import currentThread
-from Tkinter import (Tk, Toplevel, Frame, Listbox, Label, Button, Entry,
+from tkinter import (Tk, Toplevel, Frame, Listbox, Label, Button, Entry,
                      BOTH, END, LEFT, W)
 
 
@@ -52,8 +56,8 @@ class _TkDialog(Toplevel):
         self._bring_to_front()
 
     def _get_center_location(self):
-        x = (self.winfo_screenwidth() - self.winfo_reqwidth()) / 2
-        y = (self.winfo_screenheight() - self.winfo_reqheight()) / 2
+        x = old_div((self.winfo_screenwidth() - self.winfo_reqwidth()), 2)
+        y = old_div((self.winfo_screenheight() - self.winfo_reqheight()), 2)
         return x, y
 
     def _bring_to_front(self):
