@@ -1,4 +1,3 @@
-from builtins import next
 #!/usr/bin/env python
 # encoding=utf-8
 #  TODO: Copyright 2016 Robot Framework Organization
@@ -14,8 +13,7 @@ from builtins import next
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
-
+from builtins import next
 import sys
 from os.path import exists, join
 

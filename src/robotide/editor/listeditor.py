@@ -149,6 +149,7 @@ class ListEditorBase(wx.Panel):
 from sys import version_info
 if version_info[0] < 3:
     from robotide.utils.noconflict import classmaker
+
     class ListEditor(ListEditorBase, RideEventHandler):
         __metaclass__ = classmaker()
         pass
