@@ -85,8 +85,8 @@ def _parse_args(args):
         return False, False, None
     noupdatecheck = '--noupdatecheck' in args
     debug_console = '--debugconsole' in args
-    inpath = args[-1] if args[-1] not in ['--noupdatecheck',
-                                          '--debugconsole'] else None
+    inpath = args[-1] if args[-1] not in ['--noupdatecheck', '--debugconsole'] \
+        else None
     return noupdatecheck, debug_console, inpath
 
 
