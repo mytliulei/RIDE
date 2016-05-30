@@ -101,43 +101,13 @@ class ViewAllTagsDialog(wx.Frame, listmix.ColumnSorterMixin):
         self._tags_list.Bind(wx.EVT_LIST_ITEM_RIGHT_CLICK, self.OnRightClick)
         self._tags_list.Bind(wx.EVT_LIST_COL_CLICK, self.OnColClick)
 
-    def tag_name_for_sort(self, tag_name):
-        # Make tag_name lowercase for the sorting algorithm only
-        tag_name = tag_name.lower()
-        # Compare numbers as numeric values
-        # First found by priority is returned
-        m = re.search(r"(.)(\d*$)", tag_name)             # 4th whatever+digits
-        n = re.search(r"^(\w*\D*)(\d*)\w*\D*(\w*|\d*)", tag_name)  # 3rd digits
-        p = re.search(r"^(\W*)(\d*$)", tag_name)            # 2nd symbol+digits
-        q = re.search(r"^(\d*)(.*)", tag_name)            # 1st digits+whatever
-        mg = m.groups() if m is not None else [0, 0]
-        ng = n.groups() if n is not None else [0, 0]
-        pg = p.groups() if p is not None else [0, 0]
-        qg = q.groups() if q is not None else [0, 0]
-        k = [0, 0]
-        if int(qg[0] or -1) != -1:
-            k[0] = int(qg[0])
-            k[1] = qg[1]
-            return k[0], k[1]
-        if int(pg[1] or -1) != -1:
-            k[0] = pg[0]
-            k[1] = int(pg[1])
-            return k[0], k[1]
-        if int(ng[1] or -1) != -1:
-            k[0] = ng[0]  # Special case, numbers in middle and end
-            k[1] = (int(ng[1]) if int(ng[2] or -1) <= 0 else
-                    (str(int(ng[1])).zfill(2)+str(int(ng[2])).zfill(2)))
-            return k[0], k[1]
-        if int(mg[1] or -1) != -1:
-            k[0] = mg[0]
-            k[1] = int(mg[1])
-            return k[0], k[1]
-        return tag_name, 0
+    def _tag_name_for_sort(self, tag_name):
+        return [part if index % 2 == 0 else int(part) for index, part in
+                enumerate(re.split(r'(\d+)', tag_name.lower()))]
 
     def _execute(self):
         self._clear_search_results()
         self._search_for_tags()
-
         self.tagged_test_cases = list()
         self.unique_tags = 0
 
@@ -146,7 +116,7 @@ class ViewAllTagsDialog(wx.Frame, listmix.ColumnSorterMixin):
             self.tagged_test_cases += tests
             # Mapping the lists model entry with the model for sorting.
             self.itemDataMap[model_entry] = \
-                (self.tag_name_for_sort(tag_name), len(tests))
+                (self._tag_name_for_sort(tag_name), len(tests))
             self.unique_tags += 1
         self._tags_list.SetColumnWidth(1, wx.LIST_AUTOSIZE_USEHEADER)
         self._tags_list.setResizeColumn(1)
@@ -155,7 +125,7 @@ class ViewAllTagsDialog(wx.Frame, listmix.ColumnSorterMixin):
         self.SortListItems(self.sort_state[0], self.sort_state[1])
 
     def update_footer(self):
-        footer_string = ("Total tests %d, Tests with tags %d, Unique tags %d, "
+        footer_string = ("Total tests %d, Tests with tags %d, Unique tags %d\n"
                          "Currently selected tests %d") % \
                         (self.total_test_cases, len(self.tagged_test_cases),
                          self.unique_tags, len(self.selected_tests))
