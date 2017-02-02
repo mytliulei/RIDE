@@ -19,6 +19,11 @@ from robotide.context import LOG
 from robotide.publish import RideLogException
 from robotide.widgets import Label
 
+if wx.VERSION >= (3, 0, 3, ''):  # DEBUG wxPhoenix
+    from wx.adv import HyperlinkCtrl
+else:
+    from wx import HyperlinkCtrl
+
 
 class PluginManager(object):
 
@@ -84,7 +89,10 @@ require RIDE restart for menus to work.")
         return info
 
     def _create_label(self, parent, text):
-        boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        if wx.VERSION >= (3, 0, 2, 0, ''):
+            boldFont = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        else:
+            boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
         label = Label(parent, wx.ID_ANY, text)
         label.SetFont(boldFont)
@@ -145,7 +153,7 @@ class _PluginRow(wx.Panel):
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         sizer.Add(Label(self, label='%s: ' % name))
         if value.split('://')[0] in ['http', 'https']:
-            sizer.Add(wx.HyperlinkCtrl(self, -1, label=value, url=value))
+            sizer.Add(HyperlinkCtrl(self, -1, label=value, url=value))
         else:
             sizer.Add(Label(self, label=value))
         return sizer

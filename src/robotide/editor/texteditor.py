@@ -28,6 +28,11 @@ from robotide.pluginapi import Plugin, RideSaving, TreeAwarePluginMixin,\
     RideOpenSuite, RideDataChangedToDirty
 from robotide.widgets import TextField, Label, HtmlDialog
 
+if wx.VERSION >= (3, 0, 3, ''):  # DEBUG wxPhoenix
+    from wx.adv import HyperlinkCtrl, EVT_HYPERLINK
+else:
+    from wx import HyperlinkCtrl, EVT_HYPERLINK
+
 try:
     from . import robotframeworklexer
 except Exception as e:
@@ -105,7 +110,6 @@ class TextEditorPlugin(Plugin, TreeAwarePluginMixin):
                 self._editor.reset()
             if self._editor.dirty:
                 self._apply_txt_changes_to_model()
-                print("DEBUG: OnDataChanged after _apply_txt_changes_to_model\n")
             self._refresh_timer.Start(500, True) # For performance reasons only run after all the data changes
 
     def _on_timer(self, event):
@@ -121,7 +125,6 @@ class TextEditorPlugin(Plugin, TreeAwarePluginMixin):
         if self.is_focused():
             next_datafile_controller = message.item and message.item.datafile_controller
             if self._editor.dirty:
-                print("DEBUG: TreeSelection _apply_txt_changes_to_model\n")
                 if not self._apply_txt_changes_to_model():
                     if self._editor.datafile_controller != next_datafile_controller:
                         self.tree.select_controller_node(self._editor.datafile_controller)
@@ -150,9 +153,7 @@ class TextEditorPlugin(Plugin, TreeAwarePluginMixin):
 
     def _apply_txt_changes_to_model(self):
         if not self._editor.save():
-            print("DEBUG: Not Resetting at _apply_txt_changes_to_model\n")
             return False
-        print("DEBUG: Resetting at _apply_txt_changes_to_model\n")
         self._editor.reset()
         return True
 
@@ -172,7 +173,6 @@ class DataValidationHandler(object):
 
     def validate_and_update(self, data, text):
         if not self._sanity_check(data, text):
-            print("DEBUG: Data Validator!\n")
             self._handle_sanity_check_failure()
             return False
         else:
@@ -193,12 +193,9 @@ class DataValidationHandler(object):
         return text
 
     def _handle_sanity_check_failure(self):
-        print("DEBUG: Entered handle_sanity_check_failure!\n")
         if self._last_answer == wx.ID_NO and \
             time() - self._last_answer_time <= 0.2:
             self._editor._mark_file_dirty()
-            # self._last_answer = None
-            print("DEBUG: Leaving handle_sanity_check_failure!\n")
             return
         # TODO: use widgets.Dialog
         id = wx.MessageDialog(self._editor,
@@ -211,7 +208,6 @@ class DataValidationHandler(object):
         if id == wx.ID_NO:
             self._editor._mark_file_dirty()
         else:
-            print("DEBUG: Reverting handle_sanity_check_failure! id={}\n".format(id))
             self._editor._revert()
 
 
@@ -252,7 +248,6 @@ class DataFileWrapper(object): # TODO: bad class name
 
     @property
     def content(self):
-        print("DEBUG: Property CONTENT!\n")
         return self._txt_data(self._data.data)
 
     def _txt_data(self, data):
@@ -309,8 +304,8 @@ class SourceEditor(wx.Panel):
         if self._syntax_colorization_help_exists:
             return
         label = Label(self, label="Syntax colorization disabled due to missing requirements.")
-        link = wx.HyperlinkCtrl(self, -1, label="Get help", url="")
-        link.Bind(wx.EVT_HYPERLINK, self.show_help_dialog)
+        link = HyperlinkCtrl(self, -1, label="Get help", url="")
+        link.Bind(EVT_HYPERLINK, self.show_help_dialog)
         flags = wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT
         syntax_colorization_help_sizer = wx.BoxSizer(wx.VERTICAL)
         syntax_colorization_help_sizer.AddMany([
@@ -421,7 +416,6 @@ class SourceEditor(wx.Panel):
 
     def save(self, *args):
         if self.dirty:
-            print("DEBUG: Entered save dirty file!\n")
             if not self._data_validator.validate_and_update(self._data,
                                                      self._editor.utf8_text):
                 return False
@@ -473,7 +467,6 @@ class SourceEditor(wx.Panel):
 
     def LeaveFocus(self, event):
         self._editor.SetCaretPeriod(0)
-        print("DEBUG: Save from LeaveFocus!\n")
         # self.save()
 
     def GetFocus(self, event):
@@ -482,7 +475,6 @@ class SourceEditor(wx.Panel):
 
     def _revert(self):
         self.reset()
-        print("DEBUG: REVERT TEXT!\n")
         self._editor.set_text(self._data.content)
 
     def OnEditorKey(self, event):
