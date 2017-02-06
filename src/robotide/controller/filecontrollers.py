@@ -18,6 +18,10 @@ import stat
 from itertools import chain
 import shutil
 import commands
+try:
+    import subprocess32 as subprocess
+except ImportError:
+    import subprocess
 from robotide.controller.dataloader import ExcludedDirectory, TestData
 
 from robotide.publish import (RideDataFileRemoved, RideInitFileRemoved,
@@ -268,11 +272,16 @@ class _DataController(_BaseController, WithUndoRedoStacks, WithNamespace):
             self.remove_from_filesystem(old_file)
     
     def open_filemanager(self, path=None):
-		# tested on Win7 x64
+        # tested on Win7 x64
         path = path or self.filename
         if os.path.exists(path):
             if sys.platform=='win32':
-                os.startfile('"{}"'.format(os.path.dirname(path)), 'explore')
+                os.startfile("{}".format(os.path.dirname(path)), 'explore')
+            elif sys.platform=='linux2':
+                # how to detect which explorer is used? nautilus, dolphin
+                subprocess.Popen(["nautilus", "{}".format(os.path.dirname(path))])
+            else:
+                subprocess.Popen(["finder", "{}".format(os.path.dirname(path))])
     
     def remove_readonly(self, path=None):
             path = path or self.filename
